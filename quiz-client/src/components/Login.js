@@ -1,15 +1,31 @@
 import React from "react";
-import {
-  Button,
-  TextField,
-  Box,
-  CardContent,
-  Card,
-  Typography,
-} from "@mui/material";
+import useForm from "../hooks/useForm";
+import { Button, TextField, Box, CardContent, Card, Typography } from "@mui/material";
 import Center from "./Center";
 
+const getFreshModelObject = () => ({
+  email: "",
+  name: "",
+});
+
 const Login = () => {
+  const { values, setValues, errors, setErrors, handleInputChange } = useForm(getFreshModelObject);
+
+  const validate = () => {
+    let temp = {};
+    temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Email is not valid.";
+    temp.name = values.name !== "" ? "" : "This field is required.";
+    setErrors(temp);
+    return Object.values(temp).every(x => x === "");
+  };
+
+  const login = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log(values);
+    }
+  };
+
   return (
     <>
       <Center>
@@ -24,12 +40,24 @@ const Login = () => {
                 "& .MuiButton-root": { width: "90%" },
               }}
             >
-              <form noValidate autoComplete="off">
-                <TextField variant="outlined" label="Email" name="email" />
-                <TextField variant="outlined" label="Name" name="name" />
-                <Button variant="contained" type="submit" color="primary">
-                  Start
-                </Button>
+              <form noValidate autoComplete="off" onSubmit={login}>
+                <TextField
+                  onChange={handleInputChange}
+                  variant="outlined"
+                  label="Email"
+                  name="email"
+                  value={values.email}
+                  {...(errors.email && { error: true, helperText: errors.email })}
+                />
+                <TextField
+                  onChange={handleInputChange}
+                  variant="outlined"
+                  label="Name"
+                  name="name"
+                  value={values.name}
+                  {...(errors.name && { error: true, helperText: errors.name })}
+                />
+                <Button variant="contained" type="submit" color="primary">Start</Button>
               </form>
             </Box>
           </CardContent>
