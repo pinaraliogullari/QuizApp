@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QuizAPI.Domain.Entities;
 using System.Reflection;
 
 namespace QuizAPI.Persistence.Context;
 
-public class QuizAppDbContext : DbContext
+public class QuizAppDbContext : IdentityDbContext<AppUser>
 {
     public QuizAppDbContext(DbContextOptions<QuizAppDbContext> options) : base(options)
     {
     }
 
     public DbSet<Question> Questions { get; set; }
-    public DbSet<Participant> Participants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

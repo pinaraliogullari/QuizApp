@@ -1,4 +1,5 @@
 using QuizAPI.Persistence;
+using QuizAPI.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,13 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddPersistenceServices();
+builder.Services.AddApplicationService();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
