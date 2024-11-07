@@ -9,6 +9,10 @@ builder.Services.AddControllers();
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationService();
 
+builder.Services.AddCors(options => options.AddDefaultPolicy(
+                         policy => policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                         .AllowAnyMethod().AllowAnyHeader()));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

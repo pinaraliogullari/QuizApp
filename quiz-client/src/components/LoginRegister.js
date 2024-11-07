@@ -8,7 +8,7 @@ const getFreshModelObject = () => ({
   name: "",
 });
 
-const Login = () => {
+const LoginRegister = () => {
   const { values, setValues, errors, setErrors, handleInputChange } = useForm(getFreshModelObject);
 
   const validate = () => {
@@ -25,6 +25,12 @@ const Login = () => {
       console.log(values);
     }
   };
+  const register = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log(values);
+    }
+  }
 
   return (
     <>
@@ -37,7 +43,7 @@ const Login = () => {
             <Box
               sx={{
                 "& .MuiTextField-root": { m: 1, width: "90%" },
-                "& .MuiButton-root": { width: "90%" },
+                "& .MuiButton-root": { width: "90%",my:1 },
               }}
             >
               <form noValidate autoComplete="off" onSubmit={login}>
@@ -58,6 +64,7 @@ const Login = () => {
                   {...(errors.name && { error: true, helperText: errors.name })}
                 />
                 <Button variant="contained" type="submit" color="primary">Start</Button>
+                <Button variant="outlined" onClick={register}  color="primary">Register</Button>
               </form>
             </Box>
           </CardContent>
@@ -67,4 +74,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginRegister;
