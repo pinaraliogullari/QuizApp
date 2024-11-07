@@ -1,30 +1,28 @@
 import React from "react";
 import useForm from "../hooks/useForm";
 import { Button, TextField, Box, CardContent, Card, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import Center from "./Center";
 
 const getFreshModelObject = () => ({
   email: "",
-  name: "",
+  username: "",
+  password: "",
 });
 
-const LoginRegister = () => {
+const Register = () => {
   const { values, setValues, errors, setErrors, handleInputChange } = useForm(getFreshModelObject);
 
   const validate = () => {
     let temp = {};
     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Email is not valid.";
-    temp.name = values.name !== "" ? "" : "This field is required.";
+    temp.username = values.username !== "" ? "" : "This field is required.";
+    temp.password = values.password !== "" ? "" : "This field is required.";
     setErrors(temp);
     return Object.values(temp).every(x => x === "");
   };
 
-  const login = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log(values);
-    }
-  };
+
   const register = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -46,7 +44,15 @@ const LoginRegister = () => {
                 "& .MuiButton-root": { width: "90%",my:1 },
               }}
             >
-              <form noValidate autoComplete="off" onSubmit={login}>
+              <form noValidate autoComplete="off" onSubmit={register}>
+                  <TextField
+                  onChange={handleInputChange}
+                  variant="outlined"
+                  label="Username"
+                  name="username"
+                  value={values.username}
+                  {...(errors.username && { error: true, helperText: errors.username })}
+                />
                 <TextField
                   onChange={handleInputChange}
                   variant="outlined"
@@ -58,13 +64,17 @@ const LoginRegister = () => {
                 <TextField
                   onChange={handleInputChange}
                   variant="outlined"
-                  label="Name"
-                  name="name"
-                  value={values.name}
-                  {...(errors.name && { error: true, helperText: errors.name })}
+                  label="Password"
+                  name="password"
+                  value={values.password}
+                  {...(errors.password && { error: true, helperText: errors.password })}
                 />
-                <Button variant="contained" type="submit" color="primary">Start</Button>
-                <Button variant="outlined" onClick={register}  color="primary">Register</Button>
+                <Button variant="contained" type="submit" color="primary">Register</Button>
+                  <p>Already you have an account.
+                <Link  to="/login">Login</Link>
+                </p>
+             
+              
               </form>
             </Box>
           </CardContent>
@@ -74,4 +84,4 @@ const LoginRegister = () => {
   );
 };
 
-export default LoginRegister;
+export default Register;
