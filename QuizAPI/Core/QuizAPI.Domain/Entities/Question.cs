@@ -2,7 +2,7 @@
 
 namespace QuizAPI.Domain.Entities;
 
-public class Question:BaseEntity
+public class Question : BaseEntity
 {
     public string InWords { get; set; }
     public string? ImageName { get; set; }
