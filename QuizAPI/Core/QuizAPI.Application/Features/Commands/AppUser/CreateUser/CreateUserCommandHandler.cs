@@ -33,6 +33,7 @@ namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser
             }
             var newUser = new Domain.Entities.AppUser()
             {
+                Id = Guid.NewGuid().ToString(),
                 Email = request.Email,
                 UserName = request.UserName
             };

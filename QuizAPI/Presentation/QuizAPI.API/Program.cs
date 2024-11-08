@@ -6,6 +6,7 @@ using QuizAPI.Application;
 using QuizAPI.Application.Validators;
 using QuizAPI.Infrastructure.Filters;
 using QuizAPI.Persistence;
+using QuizAPI.Infrastructure;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true); 

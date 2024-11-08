@@ -12,7 +12,7 @@ using QuizAPI.Persistence.Context;
 namespace QuizAPI.Persistence.Migrations
 {
     [DbContext(typeof(QuizAppDbContext))]
-    [Migration("20241108072239_mig1")]
+    [Migration("20241108120210_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
