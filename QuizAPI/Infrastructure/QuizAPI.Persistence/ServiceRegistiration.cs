@@ -15,11 +15,11 @@ public static class ServiceRegistiration
         services.AddDbContext<QuizAppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString()));
         services.AddIdentity<AppUser, AppRole>(options =>
         {
-            options.Password.RequiredLength = 4;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
             options.User.RequireUniqueEmail = true;
         }).AddPasswordValidator<CustomPasswordValidation>()
           .AddErrorDescriber<CustomIdentityErrorDescriber>()

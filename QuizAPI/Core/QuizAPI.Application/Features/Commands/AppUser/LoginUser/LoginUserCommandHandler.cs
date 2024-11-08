@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace QuizAPI.Application.Features.Commands.AppUser.LoginUser;
 
-public class LoginAppUserCommandHandler : IRequestHandler<LoginAppUserCommandRequest, LoginAppUserCommandResponse>
+public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, LoginUserCommandResponse>
 {
     private readonly UserManager<Domain.Entities.AppUser> _userManager;
     private readonly SignInManager<Domain.Entities.AppUser> _signInManager;
 
-    public LoginAppUserCommandHandler(
+    public LoginUserCommandHandler(
         UserManager<Domain.Entities.AppUser> userManager,
         SignInManager<Domain.Entities.AppUser> signInManager)
     {
@@ -16,9 +16,9 @@ public class LoginAppUserCommandHandler : IRequestHandler<LoginAppUserCommandReq
         _signInManager = signInManager;
     }
 
-    public async Task<LoginAppUserCommandResponse> Handle(LoginAppUserCommandRequest request, CancellationToken cancellationToken)
+    public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)
     {
-        LoginAppUserCommandResponse response = new(false, "");
+        LoginUserCommandResponse response = new(false, "");
         Domain.Entities.AppUser user = await _userManager.FindByEmailAsync(request.UserNameorEmail);
         if (user == null)
             user = await _userManager.FindByNameAsync(request.UserNameorEmail);

@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 
 namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser
 {
-    public class CreateAppUserCommandHandler : IRequestHandler<CreateAppUserCommandRequest, CreateAppUserCommandResponse>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
     {
         private readonly UserManager<Domain.Entities.AppUser> _userManager;
 
-        public CreateAppUserCommandHandler(UserManager<Domain.Entities.AppUser> userManager)
+        public CreateUserCommandHandler(UserManager<Domain.Entities.AppUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<CreateAppUserCommandResponse> Handle(CreateAppUserCommandRequest request, CancellationToken cancellationToken)
+        public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
             var existingUserByEmail = await _userManager.FindByEmailAsync(request.Email);
             var existingUserByUsername = await _userManager.FindByNameAsync(request.UserName);
 
-            CreateAppUserCommandResponse response = new(false,"");
+            CreateUserCommandResponse response = new(false,"");
 
             if (existingUserByEmail != null)
             {

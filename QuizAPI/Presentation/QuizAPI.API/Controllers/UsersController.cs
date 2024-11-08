@@ -17,14 +17,14 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateAppUserCommandRequest request)
+    public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return Ok(response);
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Login(LoginAppUserCommandRequest request)
+    public async Task<IActionResult> Login(LoginUserCommandRequest request)
     {
         var response= await _mediator.Send(request);
         return Ok(response);
