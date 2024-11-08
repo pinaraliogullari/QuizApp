@@ -5,7 +5,7 @@ namespace QuizAPI.Application;
 
 public static class ServiceRegistiration
 {
-    public static void AddApplicationService(this IServiceCollection services)
+    public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddMediatR(typeof(ServiceRegistiration));
     }
