@@ -4,12 +4,12 @@ const useForm = (getFreshModelObject) => {
   const [values, setValues] = useState(getFreshModelObject());
   const [errors, setErrors] = useState({});
   const handleInputChange = (e) => {
-    const { username, value } = e.target;
-    setValues({
-      ...values,
-      [username]: value,
-    });
-  };
+  const { name, value } = e.target; 
+  setValues({
+    ...values,
+    [name]: value, 
+  });
+};
   return {
     values,
     setValues,

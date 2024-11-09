@@ -15,7 +15,7 @@ const Login = () => {
   const validate = () => {
     let temp = {};
     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Email is not valid.";
-    temp.username = values.username !== "" ? "" : "This field is required.";
+    temp.password = values.password !== "" ? "" : "This field is required.";
     setErrors(temp);
     return Object.values(temp).every(x => x === "");
   };
@@ -46,6 +46,7 @@ const Login = () => {
                 <TextField
                   onChange={handleInputChange}
                   variant="outlined"
+                  type="email"
                   label="Email"
                   name="email"
                   value={values.email}
@@ -53,6 +54,7 @@ const Login = () => {
                 />
                 <TextField
                   onChange={handleInputChange}
+                  type="password"
                   variant="outlined"
                   label="Password"
                   name="password"

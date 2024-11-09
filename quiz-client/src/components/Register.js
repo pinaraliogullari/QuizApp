@@ -1,8 +1,10 @@
 import React from "react";
 import useForm from "../hooks/useForm";
 import { Button, TextField, Box, CardContent, Card, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import Center from "./Center";
+import { createAPIEndpoint, ENDPOINTS } from "../api/index";
+
 
 const getFreshModelObject = () => ({
   email: "",
@@ -12,6 +14,7 @@ const getFreshModelObject = () => ({
 
 const Register = () => {
   const { values, setValues, errors, setErrors, handleInputChange } = useForm(getFreshModelObject);
+  const navigate = useNavigate();
 
   const validate = () => {
     let temp = {};
@@ -23,12 +26,21 @@ const Register = () => {
   };
 
 
-  const register = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log(values);
-    }
+const register = (e) => {
+  e.preventDefault();
+  if (validate()) {
+    createAPIEndpoint(ENDPOINTS.users)
+      .post(values)
+      .then((res) => {
+        console.log(res);
+        alert(res.data.message);
+        navigate('/login');
+
+      })
+      .catch((err) => console.log(err));
   }
+};
+
 
   return (
     <>
@@ -47,6 +59,7 @@ const Register = () => {
               <form noValidate autoComplete="off" onSubmit={register}>
                   <TextField
                   onChange={handleInputChange}
+                  type="text"
                   variant="outlined"
                   label="Username"
                   name="username"
@@ -55,6 +68,7 @@ const Register = () => {
                 />
                 <TextField
                   onChange={handleInputChange}
+                  type="email"
                   variant="outlined"
                   label="Email"
                   name="email"
@@ -63,6 +77,7 @@ const Register = () => {
                 />
                 <TextField
                   onChange={handleInputChange}
+                  type="password"
                   variant="outlined"
                   label="Password"
                   name="password"
@@ -82,6 +97,5 @@ const Register = () => {
       </Center>
     </>
   );
-};
-
+}
 export default Register;
