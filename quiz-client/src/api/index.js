@@ -7,9 +7,9 @@ export const ENDPOINTS = {
     questions:'questions',
 }
 
-export const createAPIEndpoint = endpoint => {
+export const createAPIEndpoint = (endpoint, action = '') => {
 
-    let url = BASE_URL + 'api/' + endpoint + '/';
+  let url = BASE_URL + 'api/' + endpoint + (action ? '/' + action : '') + '/'; 
     return {
         fetch: () => axios.get(url),
         fetchById: id => axios.get(url + id),
