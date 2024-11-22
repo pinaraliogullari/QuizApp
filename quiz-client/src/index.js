@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { ContextProvider } from "./context/StateContext";
+import { ContextProvider } from "./context/useStateContext";
 
 const darkTheme = createTheme({
   palette: {

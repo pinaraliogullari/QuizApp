@@ -12,3 +12,4 @@ public static class Configuration
         return configurationManager.GetConnectionString("SqlConnection");
     }
 }
+    

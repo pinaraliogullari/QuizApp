@@ -19,8 +19,4 @@
     <ProjectReference Include="..\QuizAPI.Domain\QuizAPI.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Queries\" />
-  </ItemGroup>
-
 </Project>

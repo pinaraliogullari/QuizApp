@@ -1,16 +1,19 @@
-import React from 'react'
-import { useContext } from 'react';
-import { StateContext } from '../context/StateContext';
+import React, { useEffect } from 'react';
+import { useStateContext } from '../context/useStateContext'; 
 
 const Quiz = () => {
-  const { context, setContext } = useContext(StateContext);
-  setContext({
-    ...context,
-    timeTaken: 1
-  })
+  const { context, setContext } = useStateContext(); 
+
+  useEffect(() => {
+    setContext({
+      ...context,
+      timeTaken: 1
+    });
+  }, [context, setContext]);
+
   return (
     <div>Question</div>
-  )
+  );
 }
 
-export default Quiz
+export default Quiz;

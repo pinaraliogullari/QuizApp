@@ -13,7 +13,7 @@ public class ReadRepository<T> : IReadRepository<T> where T : BaseEntity
 
     public ReadRepository(QuizAppDbContext context)
     {
-        _context = context;
+        _context = context; 
     }
 
     public DbSet<T> Table => _context.Set<T>();

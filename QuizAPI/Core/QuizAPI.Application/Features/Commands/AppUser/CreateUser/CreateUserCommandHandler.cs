@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System.Runtime.InteropServices;
 
 namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser
 {
