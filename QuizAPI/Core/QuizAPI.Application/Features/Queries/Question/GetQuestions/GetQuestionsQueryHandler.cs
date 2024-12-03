@@ -23,7 +23,7 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
                 x.InWords,
                 x.ImageName,
                 new List<string>
-                {
+                {   
                     x.Option1,
                     x.Option2,
                     x.Option3,

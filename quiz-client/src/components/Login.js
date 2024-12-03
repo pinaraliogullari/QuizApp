@@ -1,94 +1,93 @@
-import React from "react";
-import useForm from "../hooks/useForm";
-import { Button, TextField, Box, CardContent, Card, Typography } from "@mui/material";
-import { Link ,useNavigate} from "react-router-dom";
-import Center from "./Center";
-import { createAPIEndpoint, ENDPOINTS } from "../api";
-
-const getFreshModelObject = () => ({
-  userNameOrEmail: "",
-  password: "",
-});
+import React, { useState } from 'react';
+import { Button, TextField, Box, CardContent, Card, Typography } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import HttpClientService from '../services/HttpClientService'; 
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext'; 
+import { RequestParameters } from '../models/RequestParameters';
 
 const Login = () => {
-  const { values, setValues, errors, setErrors, handleInputChange } = useForm(getFreshModelObject);
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { baseUrl } = useContext(AppContext); 
 
-  const validate = () => {
-    let temp = {};
-  temp.userNameOrEmail = values.userNameOrEmail ? "" : "UserName or Email is required.";
-
-  if (values.userNameOrEmail && /\S+@\S+\.\S+/.test(values.userNameOrEmail)) {
-    temp.userNameOrEmail = ""; 
-  } else if (values.userNameOrEmail && values.userNameOrEmail.length < 4) {
-    temp.userNameOrEmail = "UserName must be at least 4 characters";
-  }
-    temp.password = values.password !== "" ? "" : "This field is required.";
-    setErrors(temp);
-    return Object.values(temp).every(x => x === "");
-  };
-
-  const login = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      createAPIEndpoint(ENDPOINTS.users,"login")
-      .post(values)
-      .then((res) => {
-        console.log(res);
-        alert(res.data.message);
-        navigate('/quiz');
+
+    const payload = {
+      usernameOrEmail,
+      password,
+    };
+const requestParameters = new RequestParameters(
+  'users',             // controller
+  'login',             // action
+  '',                  // queryString 
+  {},                  // headers 
+  baseUrl,             // baseUrl 
+  'users/login'              // action should be just 'login' without the '/users' prefix here
+);
+
+    try {
+     const response = await HttpClientService.post(requestParameters, payload); 
+
+  
+
+      if (response?.data?.token) {
+        const tokenData = {
+          accessToken: response.data.token.accessToken,
+          expiration: response.data.token.expiration,
+        };
+
+        localStorage.setItem('token', JSON.stringify(tokenData)); 
+        navigate('/quiz'); 
+      } else {
+        setError('Invalid login credentials');
+      }
+    } catch (error) {
+      setError('An error occurred. Please check your information.');
+      console.error(error);
     }
-      )
   };
-  }
 
   return (
-    <>
-      <Center>
-        <Card sx={{ width: 400 }}>
-          <CardContent sx={{ textAlign: "center" }}>
-            <Typography variant="h3" sx={{ my: 3 }}>
-              Quiz App
-            </Typography>
-            <Box
-              sx={{
-                "& .MuiTextField-root": { m: 1, width: "90%" },
-                "& .MuiButton-root": { width: "90%",my:1 },
-              }}
-            >
-              <form noValidate autoComplete="off" onSubmit={login}>
-                <TextField
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  type="text"
-                  label="USerName or Email"
-                  name="userNameOrEmail"
-                  value={values.userNameOrEmail}
-                  {...(errors.userNameOrEmail && { error: true, helperText: errors.userNameOrEmail })}
-                />
-                <TextField
-                  onChange={handleInputChange}
-                  type="password"
-                  variant="outlined"
-                  label="Password"
-                  name="password"
-                  value={values.password}
-                  {...(errors.password && { error: true, helperText: errors.password })}
-                />
-                <Button variant="contained" type="submit" color="primary">Start</Button>
-                <p>Don't you have an account.
-                <Link  to="/register">Register Now</Link>
-                </p>
-              
-              </form>
-            </Box>
-          </CardContent>
-        </Card>
-      </Center>
-    </>
+    <Card sx={{ width: 400, mx: 'auto', mt: 5 }}>
+      <CardContent sx={{ textAlign: 'center' }}>
+        <Typography variant="h3" sx={{ my: 3 }}>
+          Quiz App
+        </Typography>
+        <Box sx={{ '& .MuiTextField-root': { m: 1, width: '90%' }, '& .MuiButton-root': { width: '90%', my: 1 } }}>
+          <form noValidate autoComplete="off" onSubmit={handleLogin}>
+            <TextField
+              variant="outlined"
+              label="Username or Email"
+              name="usernameOrEmail"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              variant="outlined"
+              label="Password"
+              name="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+            />
+            {error && <Typography color="error">{error}</Typography>}
+            <Button variant="contained" color="primary" type="submit">
+              Login
+            </Button>
+            <p>
+              Don't have an account? <Link to="/register">Register</Link>
+            </p>
+          </form>
+        </Box>
+      </CardContent>
+    </Card>
   );
-
-}
-
+};
 
 export default Login;
