@@ -20,24 +20,23 @@ const Login = () => {
       usernameOrEmail,
       password,
     };
-const requestParameters = new RequestParameters(
-  'users',             // controller
-  'login',             // action
-  '',                  // queryString 
-  {},                  // headers 
-  baseUrl,             // baseUrl 
-  'users/login'              // action should be just 'login' without the '/users' prefix here
-);
+    const requestParameters = new RequestParameters(
+      'users', // controller
+      'login', // action
+      '', // queryString
+      {}, // headers
+      baseUrl // baseUrl
+    );
+
 
     try {
      const response = await HttpClientService.post(requestParameters, payload); 
+      console.log('API Response:', response);
 
-  
-
-      if (response?.data?.token) {
+      if (response?.token?.accessToken) {
         const tokenData = {
-          accessToken: response.data.token.accessToken,
-          expiration: response.data.token.expiration,
+          accessToken: response.token.accessToken,
+          expiration: response.token.expiration,
         };
 
         localStorage.setItem('token', JSON.stringify(tokenData)); 
