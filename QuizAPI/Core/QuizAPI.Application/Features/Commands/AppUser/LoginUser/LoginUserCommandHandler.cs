@@ -32,7 +32,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
         SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (result.Succeeded)//Authentication success.
         {
-            Token token = _tokenHandler.CreateAccessToken(15);
+            Token token = _tokenHandler.CreateAccessToken(60);
             response = response with { IsSuccessful = true, Message = "Login is successful", Token = token };
             //Authorization process...
 

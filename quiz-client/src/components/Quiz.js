@@ -23,18 +23,20 @@ export default function Quiz() {
         }, 1000);
     };
     useEffect(() => {
-        const token = localStorage.getItem('token'); 
-        const requestParameters = new RequestParameters(
-            'questions',          // controller 
-            'getQuestions',       // action 
-            '',                   // queryString
-            { 'Authorization': `Bearer ${token}` }, // headers 
-            baseUrl,              // baseUrl
-            'quiz/getQuestions'   // fullEndPoint
-        );
-
+    const tokenString = localStorage.getItem('token');
+    const accessToken = tokenString ? JSON.parse(tokenString).accessToken : null;
+     const requestParameters = new RequestParameters(
+      'questions', // controller
+      '', // action
+      '', // queryString
+      accessToken, // headers
+      baseUrl ,// baseUrl
+      '' // fullEndPoint         
+                  
+);
         HttpClientService.get(requestParameters)
             .then((res) => {
+                  console.log(requestParameters);
                 setQns(res.data); 
                 startTimer(); 
             })
@@ -62,42 +64,42 @@ export default function Quiz() {
         }
     };
 
-    return (
-        qns.length !== 0 ? (
-            <Card sx={{ maxWidth: 640, mx: 'auto', mt: 5, '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}>
-                <CardHeader
-                    title={`Question ${qnIndex + 1} of ${qns.length}`}
-                    action={<Typography>{getFormatedTime(timeTaken)}</Typography>} 
+  return (
+    qns && qns.length > 0 ? ( 
+        <Card sx={{ maxWidth: 640, mx: 'auto', mt: 5, '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}>
+            <CardHeader
+                title={`Question ${qnIndex + 1} of ${qns.length}`}
+                action={<Typography>{getFormatedTime(timeTaken)}</Typography>} 
+            />
+            <Box>
+                <LinearProgress variant="determinate" value={(qnIndex + 1) * 100 / qns.length} />
+            </Box>
+            {qns[qnIndex].imageName && (
+                <CardMedia
+                    component="img"
+                    image={`https://localhost:7291/api/images/${qns[qnIndex].imageName}`}
+                    sx={{ width: 'auto', m: '10px auto' }}
                 />
-                <Box>
-                    <LinearProgress variant="determinate" value={(qnIndex + 1) * 100 / qns.length} />
-                </Box>
-                {qns[qnIndex].imageName && (
-                    <CardMedia
-                        component="img"
-                        image={`https://localhost:7291/api/images/${qns[qnIndex].imageName}`}
-                        sx={{ width: 'auto', m: '10px auto' }}
-                    />
-                )}
-                <CardContent>
-                    <Typography variant="h6">{qns[qnIndex].InWords}</Typography>
-                    <List>
-                        {qns[qnIndex].options.map((item, idx) => (
-                            <ListItemButton
-                                disableRipple
-                                key={idx}
-                                onClick={() => updateAnswer(qns[qnIndex].qnId, idx)}
-                            >
-                                <div>
-                                    <b>{String.fromCharCode(65 + idx)} . </b>{item}
-                                </div>
-                            </ListItemButton>
-                        ))}
-                    </List>
-                </CardContent>
-            </Card>
-        ) : (
-            <Typography variant="h6" align="center">Loading Questions...</Typography>
-        )
-    );
+            )}
+            <CardContent>
+                <Typography variant="h6">{qns[qnIndex].InWords}</Typography>
+                <List>
+                    {qns[qnIndex].options.map((item, idx) => (
+                        <ListItemButton
+                            disableRipple
+                            key={idx}
+                            onClick={() => updateAnswer(qns[qnIndex].qnId, idx)}
+                        >
+                            <div>
+                                <b>{String.fromCharCode(65 + idx)} . </b>{item}
+                            </div>
+                        </ListItemButton>
+                    ))}
+                </List>
+            </CardContent>
+        </Card>
+    ) : (
+        <Typography variant="h6" align="center">Loading Questions...</Typography>
+    )
+);
 }

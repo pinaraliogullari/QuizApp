@@ -3,14 +3,18 @@ import axios from 'axios';
 class HttpClientService {
     constructor() {
         this.client = axios.create();
+        
+        // İstek öncesi interceptor ekleyerek token ekleme
         this.client.interceptors.request.use(
             (config) => {
                 const tokenString = localStorage.getItem('token');
                 const accessToken = tokenString ? JSON.parse(tokenString).accessToken : null;
 
                 if (accessToken) {
+                    // Authorization başlığına token ekleme
                     config.headers['Authorization'] = `Bearer ${accessToken}`;
                 }
+
                 return config;
             },
             (error) => {
@@ -19,10 +23,12 @@ class HttpClientService {
         );
     }
 
+    // Base URL ve controller ile url oluşturma
     url(requestParameters) {
         return `${requestParameters.baseUrl || ''}/${requestParameters.controller}${requestParameters.action ? `/${requestParameters.action}` : ''}`;
     }
 
+    // GET isteği
     async get(requestParameters, id = '') {
         const url = requestParameters.fullEndPoint || `${this.url(requestParameters)}${id ? `/${id}` : ''}${requestParameters.queryString ? `?${requestParameters.queryString}` : ''}`;
         console.log('GET Request URL:', url);
@@ -36,6 +42,7 @@ class HttpClientService {
         }
     }
 
+    // POST isteği
     async post(requestParameters, body) {
         const url = requestParameters.fullEndPoint || `${this.url(requestParameters)}${requestParameters.queryString ? `?${requestParameters.queryString}` : ''}`;
         console.log('POST Request URL:', url);
@@ -50,6 +57,7 @@ class HttpClientService {
         }
     }
 
+    // PUT isteği
     async put(requestParameters, body) {
         const url = requestParameters.fullEndPoint || `${this.url(requestParameters)}${requestParameters.queryString ? `?${requestParameters.queryString}` : ''}`;
         console.log('PUT Request URL:', url);
@@ -64,6 +72,7 @@ class HttpClientService {
         }
     }
 
+    // DELETE isteği
     async delete(requestParameters, id) {
         const url = requestParameters.fullEndPoint || `${this.url(requestParameters)}/${id}${requestParameters.queryString ? `?${requestParameters.queryString}` : ''}`;
         console.log('DELETE Request URL:', url);
