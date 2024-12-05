@@ -17,6 +17,7 @@ const Result = () => {
 
   useEffect(() => {
     const ids = selectedOptions.map(x => x.qnId);
+    const payload = { questionIds: ids };
     const requestParameters = new RequestParameters(
       'questions', // 
       '', // Action 
@@ -26,7 +27,7 @@ const Result = () => {
       '', // Full endpoint 
     );
 
-    HttpClientService.post(requestParameters, ids)
+    HttpClientService.post(requestParameters, payload)
       .then(res => {
         const qna = selectedOptions.map(x => ({
           ...x,

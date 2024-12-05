@@ -8,7 +8,11 @@ export const AppProvider = ({ children }) => {
   const [timeTaken, setTimeTaken] = useState(0);
 
   const updateSelectedOptions = (newOption) => {
-    setSelectedOptions(prev => [...prev, newOption]);
+    if (!Array.isArray(newOption) && newOption.qnId !== undefined && newOption.selected !== undefined) {
+      setSelectedOptions(prev => [...prev, newOption]);
+    } else {
+      console.error("Invalid option attempted to add:", newOption);
+    }
   };
 
   const updateTimeTaken = (newTime) => {
@@ -16,15 +20,16 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{baseUrl, selectedOptions, timeTaken,setTimeTaken,setSelectedOptions, updateSelectedOptions, updateTimeTaken }}>
+    <AppContext.Provider value={{
+      baseUrl,
+      selectedOptions,
+      timeTaken,
+      setTimeTaken,
+      setSelectedOptions,
+      updateSelectedOptions,
+      updateTimeTaken
+    }}>
       {children}
     </AppContext.Provider>
   );
 };
-
-
-
- 
-
-
-
