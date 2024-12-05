@@ -6,6 +6,7 @@ import Quiz from "./components/Quiz";
 import Result from "./components/Result";
 import { AppContext } from "./context/AppContext";
 import PrivateRoute from "./guard/PrivateRoute";
+import Layout from "./components/Layout";
 
 
 function App() {
@@ -18,8 +19,10 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Layout />} >
         <Route path="/quiz" element={<PrivateRoute><Quiz /></PrivateRoute>} />
         <Route path="/result" element={<PrivateRoute><Result /></PrivateRoute>} />
+        </Route>
       </Routes>
       </BrowserRouter>
     </AppContext.Provider>
