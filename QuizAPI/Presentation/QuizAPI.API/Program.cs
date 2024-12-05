@@ -56,6 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
+
 if (!Directory.Exists(imagesPath))
 {
     Directory.CreateDirectory(imagesPath);
@@ -64,7 +65,7 @@ if (!Directory.Exists(imagesPath))
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(imagesPath),
-    RequestPath = "/Images"
+    RequestPath = "/api/images"
 });
 app.UseCors();
 app.UseAuthentication();

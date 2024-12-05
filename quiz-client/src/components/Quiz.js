@@ -83,10 +83,11 @@ export default function Quiz() {
                 {qns[qnIndex].imageName && (
                     <CardMedia
                         component="img"
-                        image={`https://localhost:7291/api/images/${qns[qnIndex].imageName}`}
+                        image={baseUrl + '/images/' + qns[qnIndex].imageName}
                         sx={{ width: 'auto', m: '10px auto' }}
                     />
                 )}
+                console.log({baseUrl + '/images/' + qns[qnIndex].imageName});
                 <CardContent>
                     <Typography variant="h6">{qns[qnIndex].inWords}</Typography>
                     <List>
