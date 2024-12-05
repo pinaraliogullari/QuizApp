@@ -4,16 +4,16 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Quiz from "./components/Quiz";
 import Result from "./components/Result";
-import { AppContext } from "./context/AppContext";
+import {AppProvider } from "./context/AppContext";
 import PrivateRoute from "./guard/PrivateRoute";
 import Layout from "./components/Layout";
 
 
 function App() {
- const baseUrl = 'https://localhost:7291/api';
+ 
   return (
     <>
-   <AppContext.Provider value={{ baseUrl }}>
+   <AppProvider>
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -25,7 +25,7 @@ function App() {
         </Route>
       </Routes>
       </BrowserRouter>
-    </AppContext.Provider>
+ </AppProvider>
 
     </>
   );

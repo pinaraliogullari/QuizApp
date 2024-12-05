@@ -1,29 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import HttpClientService from '../services/HttpClientService'; 
 import { RequestParameters } from '../models/RequestParameters'; 
 import { Card, CardContent, CardMedia, CardHeader, List, ListItemButton, Typography, Box, LinearProgress } from '@mui/material';
 import { getFormatedTime } from '../helper';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-export default function Quiz() {
+const Quiz = () => {
     const [qns, setQns] = useState([]);  
     const [qnIndex, setQnIndex] = useState(0);  
-    const [timeTaken, setTimeTaken] = useState(0);  
-    const [selectedOptions, setSelectedOptions] = useState([]);  
-    const { baseUrl } = useContext(AppContext);  
+    const { baseUrl, selectedOptions, timeTaken, updateSelectedOptions, updateTimeTaken } = useContext(AppContext);  
     const navigate = useNavigate();  
 
-  
     let timer;
     const startTimer = () => {
         timer = setInterval(() => {
-            setTimeTaken(prev => prev + 1);
+            updateTimeTaken(prev => prev + 1);
         }, 1000);
     };
 
     useEffect(() => {
+            startTimer(); 
         const requestParameters = new RequestParameters(
             'questions',  // controller
             '',  // action
@@ -33,42 +30,37 @@ export default function Quiz() {
             ''  // fullEndPoint
         );
 
-    HttpClientService.get(requestParameters)
-    .then((res) => {
-        console.log('Questions:', res);  
-        setQns(res);  
-        startTimer(); 
-    })
-    .catch((err) => {
-        console.error('Error fetching questions', err);
-    });
+        HttpClientService.get(requestParameters)
+            .then((res) => {
+                console.log('Questions:', res);  
+                setQns(res);  
+            
+            })
+            .catch((err) => {
+                console.error('Error fetching questions', err);
+            });
 
         return () => clearInterval(timer);
     }, [baseUrl]);
 
-    
-    const updateAnswer = (qnId, optionIdx) => {
-        const newSelectedOption = {
-            qnId,
-            selected: optionIdx,
-        };
-
-  
-        setSelectedOptions(prevOptions => [...prevOptions, newSelectedOption]);
-
-    
-        if (qnIndex < qns.length - 1) {
-            setQnIndex(qnIndex + 1); 
-        } else {
-         
-            const payload = {
-                selectedOptions, 
-                timeTaken
-            };
-            console.log(payload); 
-             navigate('/result'); 
-        }
+  const updateAnswer = (qnId, optionIdx) => {
+    const newSelectedOption = {
+        qnId,
+        selected: optionIdx,
     };
+
+    updateSelectedOptions(newSelectedOption);
+
+    if (qnIndex < qns.length - 1) {
+      
+        setQnIndex(prevIndex => prevIndex + 1);
+    } else {
+        console.log(qnIndex);
+        updateSelectedOptions(selectedOptions);  
+        navigate('/result');  
+    }
+};
+
 
     return (
         qns && qns.length > 0 ? (
@@ -87,7 +79,6 @@ export default function Quiz() {
                         sx={{ width: 'auto', m: '10px auto' }}
                     />
                 )}
-                console.log({baseUrl + '/images/' + qns[qnIndex].imageName});
                 <CardContent>
                     <Typography variant="h6">{qns[qnIndex].inWords}</Typography>
                     <List>
@@ -115,4 +106,6 @@ export default function Quiz() {
             <Typography variant="h6" align="center">Loading Questions...</Typography>
         )
     );
-}
+};
+
+export default Quiz;
