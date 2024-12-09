@@ -4,5 +4,5 @@ namespace QuizAPI.Application;
 
 public interface ITokenHandler
 {
-    Token CreateAccessToken(int minute);
+    Token CreateAccessToken(int minute,string userId,string userName);
 }

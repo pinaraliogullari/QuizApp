@@ -38,7 +38,7 @@ public class ReadRepository<T> : IReadRepository<T> where T : BaseEntity
         IQueryable<T> query = Table;
         if (!tracking)
             query = query.AsNoTracking();
-        return await query.SingleOrDefaultAsync(x=>x.Id==int.Parse(id));
+        return await query.SingleOrDefaultAsync(x=>x.Id==Guid.Parse(id));
     }
 
     public async Task<T> GetSingleAsync(Expression<Func<T, bool>> options = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool tracking = true)

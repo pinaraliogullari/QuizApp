@@ -25,17 +25,17 @@ const Register = () => {
 
     const requestParameters = new RequestParameters(
       'users',             // controller
-      'register',          // action
+      '',          // action
       '',                  // queryString 
       {},                  // headers 
       baseUrl,             // baseUrl
-      `users/register`     // fullEndPoint
+      ``     // fullEndPoint
     );
 
     try {
       const response = await HttpClientService.post(requestParameters, payload); 
 
-      if (response?.data?.success) {
+      if (response?.success) {
         setSuccess('Registration successful! Please log in to continue.');
         setError(''); 
         setTimeout(() => {

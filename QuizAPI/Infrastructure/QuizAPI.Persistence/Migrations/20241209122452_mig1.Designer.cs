@@ -12,7 +12,7 @@ using QuizAPI.Persistence.Context;
 namespace QuizAPI.Persistence.Migrations
 {
     [DbContext(typeof(QuizAppDbContext))]
-    [Migration("20241108120210_mig1")]
+    [Migration("20241209122452_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
@@ -231,11 +231,9 @@ namespace QuizAPI.Persistence.Migrations
 
             modelBuilder.Entity("QuizAPI.Domain.Entities.Question", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Answer")
                         .HasColumnType("int");

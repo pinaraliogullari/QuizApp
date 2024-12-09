@@ -12,7 +12,7 @@ const Result = () => {
   const [score, setScore] = useState(0);
   const [qnAnswers, setQnAnswers] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-  const { selectedOptions, timeTaken, baseUrl, updateTimeTaken, setSelectedOptions } = useContext(AppContext);
+  const { selectedOptions, timeTaken, baseUrl,userId, updateTimeTaken, setSelectedOptions } = useContext(AppContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,6 +64,36 @@ const Result = () => {
     navigate('/quiz');
   };
 
+const submitScore = (userId) => {
+console.log('userId',userId)
+  const payload = {
+    Id: userId,     
+    Score: score,   
+    TimeTaken: timeTaken, 
+  };
+
+  const requestParameters = {
+    controller: 'Users',          
+    action: '',        
+    queryString: '',           
+    headers: {},                
+    baseUrl: baseUrl,         
+    fullEndPoint: '',            
+  };
+
+ 
+  HttpClientService.put(requestParameters, payload)
+    .then((res) => {
+      console.log('Score submitted:', res);
+      setShowAlert(true);
+       setTimeout(() => {
+          setShowAlert(false)
+        }, 4000);
+    })
+    .catch((err) => console.error('Error submitting score:', err));
+};
+
+
   return (
     <Card sx={{ mt: 5, display: 'flex', width: '100%', maxWidth: 640, mx: 'auto' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -71,18 +101,18 @@ const Result = () => {
           <Typography variant="h4">Congratulations!</Typography>
           <Typography variant="h6">YOUR SCORE</Typography>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            <Typography variant="span" color={green[500]}>
+            <span style={{ color: green[500] }}>
               {score}
-            </Typography>
+            </span>
             /5
           </Typography>
           <Typography variant="h6">
             Took {getFormatedTime(timeTaken)} mins
           </Typography>
-          <Button variant="contained" sx={{ mx: 1 }} size="small">
+          <Button variant="contained"  sx={{ mx: 1, mb: 2 }} size="small" onClick={()=>submitScore(userId)}>
             Submit
           </Button>
-          <Button variant="contained" sx={{ mx: 1 }} size="small" onClick={restart}>
+          <Button variant="contained"  sx={{ mx: 1, mb: 2 }}size="small" onClick={restart}>
             Re-try
           </Button>
           <Alert

@@ -2,7 +2,7 @@
 
 public class RetrieveQuestionsQueryResponse
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string InWords { get; set; }
     public string ImageName { get; set; }
     public List<string> Options { get; set; }

@@ -228,11 +228,9 @@ namespace QuizAPI.Persistence.Migrations
 
             modelBuilder.Entity("QuizAPI.Domain.Entities.Question", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Answer")
                         .HasColumnType("int");

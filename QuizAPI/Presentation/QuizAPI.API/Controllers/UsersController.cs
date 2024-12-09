@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QuizAPI.Application.Features.Commands.AppUser.CreateUser;
 using QuizAPI.Application.Features.Commands.AppUser.LoginUser;
+using QuizAPI.Application.Features.Commands.AppUser.UpdateUserScore;
 
 namespace QuizAPI.API.Controllers;
 
@@ -26,7 +27,15 @@ public class UsersController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Login(LoginUserCommandRequest request)
     {
-        var response= await _mediator.Send(request);
+        var response = await _mediator.Send(request);
         return Ok(response);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateScore(UpdateUserScoreCommandRequest request)
+    {
+        var response = await _mediator.Send(request);
+        return Ok(response);
+
     }
 }

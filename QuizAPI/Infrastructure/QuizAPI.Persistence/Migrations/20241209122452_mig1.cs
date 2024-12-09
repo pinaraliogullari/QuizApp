@@ -56,8 +56,7 @@ namespace QuizAPI.Persistence.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InWords = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     ImageName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Option1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
