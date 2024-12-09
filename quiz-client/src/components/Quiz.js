@@ -22,19 +22,17 @@ const Quiz = () => {
     useEffect(() => {
             startTimer(); 
         const requestParameters = new RequestParameters(
-            'questions',  // controller
-            '',  // action
-            '',  // queryString
-            {},  // headers
-            baseUrl,  // baseUrl
-            ''  // fullEndPoint
+            'questions',  
+            '',  
+            '',  
+            {},  
+            baseUrl,  
+            ''  
         );
 
         HttpClientService.get(requestParameters)
             .then((res) => {
-                console.log('Questions:', res);  
                 setQns(res);  
-            
             })
             .catch((err) => {
                 console.error('Error fetching questions', err);
@@ -52,15 +50,12 @@ const Quiz = () => {
     updateSelectedOptions(newSelectedOption);
 
     if (qnIndex < qns.length - 1) {
-      
         setQnIndex(prevIndex => prevIndex + 1);
     } else {
-        console.log(qnIndex);
         updateSelectedOptions(selectedOptions);  
         navigate('/result');  
     }
 };
-
 
     return (
         qns && qns.length > 0 ? (

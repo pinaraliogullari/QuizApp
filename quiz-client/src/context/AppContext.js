@@ -8,10 +8,12 @@ export const AppProvider = ({ children }) => {
   const [timeTaken, setTimeTaken] = useState(0);
 
   const updateSelectedOptions = (newOption) => {
-    if (!Array.isArray(newOption) && newOption.qnId !== undefined && newOption.selected !== undefined) {
-      setSelectedOptions(prev => [...prev, newOption]);
-    } else {
-      console.error("Invalid option attempted to add:", newOption);
+    if (newOption && newOption.qnId !== undefined && newOption.selected !== undefined) {
+      setSelectedOptions(prev => {
+        const optionExists = prev.some(option => option.qnId === newOption.qnId);
+        if (optionExists) return prev; 
+        return [...prev, newOption];
+      });
     }
   };
 
