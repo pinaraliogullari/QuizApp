@@ -12,55 +12,57 @@ const Result = () => {
   const [score, setScore] = useState(0);
   const [qnAnswers, setQnAnswers] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-  const { selectedOptions, timeTaken, baseUrl,updateTimeTaken,setSelectedOptions } = useContext(AppContext);
+  const { selectedOptions, timeTaken, baseUrl, updateTimeTaken, setSelectedOptions } = useContext(AppContext);
   const navigate = useNavigate();
 
   useEffect(() => {
- // Unique selected options
-const uniqueSelectedOptions = selectedOptions.filter(
-  (item, index, self) => index === self.findIndex((t) => t.qnId === item.qnId)
-);
+    console.log('Selected Options:', selectedOptions);  
+    const uniqueSelectedOptions = selectedOptions.filter(
+      (item, index, self) => index === self.findIndex((t) => t.qnId === item.qnId)
+    );
+    console.log('Unique Selected Options:', uniqueSelectedOptions);
 
-// Fakat burada sadece 5 soru id'sini almak istiyoruz:
-const questionIds = uniqueSelectedOptions.slice(0, 5).map((x) => x.qnId);  // İlk 5 soruyu alıyoruz
+    const questionIds = uniqueSelectedOptions.slice(0, 5).map((x) => x.qnId);
+    console.log('Question IDs:', questionIds);
 
-const payload = { questionIds };
+    const payload = { questionIds };
+    const requestParameters = new RequestParameters(
+      'questions',
+      '', // Action
+      '', // Query string
+      {}, // Headers
+      baseUrl,
+      '' // Full endpoint
+    );
 
-// requestParameters'i oluşturuyoruz
-const requestParameters = new RequestParameters(
-  'questions',
-  '', // Action
-  '', // Query string
-  {}, // Headers
-  baseUrl,
-  '' // Full endpoint
-);
-
-HttpClientService.post(requestParameters, payload)
-  .then((res) => {
-    console.log('Fetched data:', res);
-    const qna = uniqueSelectedOptions.slice(0, 5).map((x) => ({
-      ...x,
-      ...(res.find((y) => y.qnId === x.qnId)),
-    }));
-    setQnAnswers(qna);
-    calculateScore(qna);
-  })
-  .catch((err) => console.error('Error fetching data:', err));
-  }, [baseUrl]); 
-
+    HttpClientService.post(requestParameters, payload)
+      .then((res) => {
+        console.log('Fetched data:', res);
+        const qna = uniqueSelectedOptions.slice(0, 5).map((x) => ({
+          ...x,
+          ...(res.find((y) => y.id === x.qnId)),  
+        }));
+        console.log('QnA:', qna);  
+        setQnAnswers(qna);
+        calculateScore(qna);
+      })
+      .catch((err) => console.error('Error fetching data:', err));
+  }, [baseUrl, selectedOptions]);
 
   const calculateScore = (qna) => {
-    const tempScore = qna.reduce((acc, curr) => (curr.answer === curr.selected ? acc + 1 : acc), 0);
+    const tempScore = qna.reduce((acc, curr) => {
+      console.log(`Answer: ${curr.answer}, Selected: ${curr.selected}`); 
+      return curr.answer === curr.selected ? acc + 1 : acc;
+    }, 0);
+    console.log('Score:', tempScore);
     setScore(tempScore);
   };
 
-const restart = () => {
-  setSelectedOptions([]); 
-  updateTimeTaken(0);
-  navigate('/quiz');
-};
-
+  const restart = () => {
+    setSelectedOptions([]); 
+    updateTimeTaken(0);
+    navigate('/quiz');
+  };
 
   return (
     <Card sx={{ mt: 5, display: 'flex', width: '100%', maxWidth: 640, mx: 'auto' }}>
