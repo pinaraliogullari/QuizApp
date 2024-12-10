@@ -22,18 +22,33 @@ public class CreateUserCommandHandlerTests
     public async Task Handle_UserExistsByEmail_ReturnErrorResponse()
     {
         //Arrange
-
         var command = new CreateUserCommandRequest("testuser", "test@mail.com", "Sample1234.");
-        var existingUser = new AppUser() { UserName = "testuser", Email = "test@mail.com" };
+        var existingUser = new AppUser() { UserName = "olduser", Email = "test@mail.com" };
         _userManagerMock.Setup(x => x.FindByEmailAsync(command.Email)).ReturnsAsync(existingUser);
 
         //Act
-
         var result = await _createUserCommandHandler.Handle(command, default);
 
         //Assert
-
         result.IsSuccessful.Should().BeFalse();
         result.Message.Should().Be("This email address is already in use.");
+    }
+
+    [Fact]
+    public async Task Handle_UserExistsByUsername_ReturnErrorResponse()
+    {
+        //Arrange
+        var command = new CreateUserCommandRequest( "testuser",  "test@mail.com","Sample1234.");
+        var existingUser = new AppUser() { UserName = "testuser", Email = "olduser@mail.com" };
+        _userManagerMock.Setup(x=>x.FindByNameAsync(command.UserName)).ReturnsAsync(existingUser);
+
+        //Act
+        var result= await _createUserCommandHandler.Handle(command,default);
+
+        //Assert
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Be("This username is already taken.");
+
+     
     }
 }

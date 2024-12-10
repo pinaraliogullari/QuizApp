@@ -4,8 +4,6 @@ This is a quiz app developed with **ASP.NET Core Web API** and **React.js**.
 
 ---
 
-## Key Features & Technologies Used
-
 ## Backend
 - **.NET 8**
 - **Entity Framework Core**
@@ -24,7 +22,6 @@ This is a quiz app developed with **ASP.NET Core Web API** and **React.js**.
 - **Context API**
 - **Axios**
 
----
 
 ## User Information
 - **Username**: `test`
