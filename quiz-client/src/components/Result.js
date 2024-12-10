@@ -7,6 +7,7 @@ import { green } from '@mui/material/colors';
 import { AppContext } from '../context/AppContext';
 import HttpClientService from '../services/HttpClientService';
 import { RequestParameters } from '../models/RequestParameters';
+import Answer from './Answer';
 
 const Result = () => {
   const [score, setScore] = useState(0);
@@ -95,6 +96,7 @@ console.log('userId',userId)
 
 
   return (
+    <>
     <Card sx={{ mt: 5, display: 'flex', width: '100%', maxWidth: 640, mx: 'auto' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <CardContent sx={{ flex: '1 0 auto', textAlign: 'center' }}>
@@ -130,6 +132,8 @@ console.log('userId',userId)
       </Box>
       <CardMedia component="img" sx={{ width: 220 }} image="./result.png" alt="Result" />
     </Card>
+    <Answer qnAnswers={qnAnswers} />
+    </>
   );
 };
 
