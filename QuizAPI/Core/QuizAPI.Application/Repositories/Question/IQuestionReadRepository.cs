@@ -2,7 +2,7 @@
 
 namespace QuizAPI.Application.Repositories
 {
-    public interface IQuestionReadRepository:IReadRepository<Question>
+    public interface IQuestionReadRepository : IReadRepository<Question>
     {
     }
 }

@@ -1,3 +1,4 @@
-﻿namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser;
+﻿
+namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser;
 
-public record CreateUserCommandResponse(bool IsSuccessful,string Message);
+public record CreateUserCommandResponse(bool IsSuccessful, string Message);

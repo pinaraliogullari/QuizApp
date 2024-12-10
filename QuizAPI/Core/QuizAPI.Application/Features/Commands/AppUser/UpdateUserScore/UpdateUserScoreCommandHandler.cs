@@ -15,12 +15,12 @@ public class UpdateUserScoreCommandHandler : IRequestHandler<UpdateUserScoreComm
     public async Task<UpdateUserScoreCommandResponse> Handle(UpdateUserScoreCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.Id.ToString());
-        if(user == null)
+        if (user == null)
             throw new ArgumentException("User can not found");
         user.Score = request.Score;
         user.TimeTaken = request.TimeTaken;
-        var result= await _userManager.UpdateAsync(user);
-        if(result.Succeeded)
+        var result = await _userManager.UpdateAsync(user);
+        if (result.Succeeded)
         {
             return new UpdateUserScoreCommandResponse
             {
@@ -37,7 +37,7 @@ public class UpdateUserScoreCommandHandler : IRequestHandler<UpdateUserScoreComm
             };
         }
 
-        
+
         throw new NotImplementedException();
     }
 }

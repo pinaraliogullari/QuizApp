@@ -27,8 +27,8 @@ namespace QuizAPI.Infrastructure
             token.Expiration = DateTime.UtcNow.AddMinutes(minute);
             var claims = new[]
                {
-                new Claim("userId", userId), 
-                new Claim("userName", userName) 
+                new Claim("userId", userId),
+                new Claim("userName", userName)
             };
 
 

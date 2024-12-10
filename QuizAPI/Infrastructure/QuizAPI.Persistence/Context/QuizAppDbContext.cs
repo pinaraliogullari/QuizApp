@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace QuizAPI.Persistence.Context;
 
-public class QuizAppDbContext : IdentityDbContext<AppUser,AppRole,string>
+public class QuizAppDbContext : IdentityDbContext<AppUser, AppRole, string>
 {
     public QuizAppDbContext(DbContextOptions<QuizAppDbContext> options) : base(options)
     {

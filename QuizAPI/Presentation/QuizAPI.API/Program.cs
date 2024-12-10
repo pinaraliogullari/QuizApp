@@ -1,14 +1,14 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using QuizAPI.Application;
 using QuizAPI.Application.Validators;
+using QuizAPI.Infrastructure;
 using QuizAPI.Infrastructure.Filters;
 using QuizAPI.Persistence;
-using QuizAPI.Infrastructure;
 using System.Text;
-using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
-    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true); 
+    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandRequestValidator>();
 

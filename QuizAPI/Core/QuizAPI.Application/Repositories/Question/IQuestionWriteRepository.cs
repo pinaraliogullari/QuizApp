@@ -2,7 +2,7 @@
 
 namespace QuizAPI.Application.Repositories
 {
-    public interface IQuestionWriteRepository:IWriteRepository<Question>
+    public interface IQuestionWriteRepository : IWriteRepository<Question>
     {
     }
 }

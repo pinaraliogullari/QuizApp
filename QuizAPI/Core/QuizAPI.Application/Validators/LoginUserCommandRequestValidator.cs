@@ -9,13 +9,13 @@ public class LoginUserCommandRequestValidator : AbstractValidator<LoginUserComma
     {
         RuleFor(x => x.UserNameorEmail)
                .NotEmpty().WithMessage("UserName or Email is required")
-               .When(x => !string.IsNullOrEmpty(x.UserNameorEmail)) 
+               .When(x => !string.IsNullOrEmpty(x.UserNameorEmail))
                .MinimumLength(4).WithMessage("UserName must be at least 4 characters")
-               .When(x => !x.UserNameorEmail.Contains("@")) 
+               .When(x => !x.UserNameorEmail.Contains("@"))
                .EmailAddress().WithMessage("Please enter a valid email address.")
-               .When(x => x.UserNameorEmail.Contains("@")); 
+               .When(x => x.UserNameorEmail.Contains("@"));
 
-    
+
         RuleFor(x => x.Password)
             .NotEmpty().NotNull().WithMessage("Password is required")
             .MinimumLength(4).WithMessage("Password length must be at least 4 characters")

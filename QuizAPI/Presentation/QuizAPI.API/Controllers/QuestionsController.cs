@@ -10,7 +10,7 @@ namespace QuizAPI.API.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class QuestionsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,7 +20,7 @@ namespace QuizAPI.API.Controllers
             _mediator = mediator;
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> GetQuestions()
         {

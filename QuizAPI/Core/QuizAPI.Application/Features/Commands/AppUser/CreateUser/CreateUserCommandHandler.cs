@@ -17,7 +17,7 @@ namespace QuizAPI.Application.Features.Commands.AppUser.CreateUser
             var existingUserByEmail = await _userManager.FindByEmailAsync(request.Email);
             var existingUserByUsername = await _userManager.FindByNameAsync(request.UserName);
 
-            CreateUserCommandResponse response = new(false,"");
+            CreateUserCommandResponse response = new(false, "");
 
             if (existingUserByEmail != null)
             {

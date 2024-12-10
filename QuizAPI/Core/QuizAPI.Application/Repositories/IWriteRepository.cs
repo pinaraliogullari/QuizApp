@@ -1,6 +1,6 @@
 ﻿namespace QuizAPI.Application.Repositories
 {
-    public interface IWriteRepository<T>:IRepository<T> where T : class
+    public interface IWriteRepository<T> : IRepository<T> where T : class
     {
         Task<bool> CreateAsync(T entity);
         bool Update(T entity);

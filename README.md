@@ -6,7 +6,7 @@ This is a quiz app developed with **ASP.NET Core Web API** and **React.js**.
 
 ## Key Features & Technologies Used
 
-### Backend
+## Backend
 - **.NET 8**
 - **Entity Framework Core**
 - **Onion Architecture**
@@ -18,7 +18,7 @@ This is a quiz app developed with **ASP.NET Core Web API** and **React.js**.
 - **Generic Repository Design Pattern**
 - **MSSQL**
 
-### Frontend
+## Frontend
 - **React.js**
 - **Material-UI**
 - **Context API**

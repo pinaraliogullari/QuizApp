@@ -34,7 +34,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
         {
             var userId = user.Id.ToString();
             var userName = user.UserName;
-            Token token = _tokenHandler.CreateAccessToken(60, userId,userName);
+            Token token = _tokenHandler.CreateAccessToken(60, userId, userName);
             response = response with { IsSuccessful = true, Message = "Login is successful", Token = token };
             //Authorization process...
 
