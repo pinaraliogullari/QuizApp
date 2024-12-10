@@ -68,4 +68,29 @@ public class CreateUserCommandHandlerTests
         result.IsSuccessful.Should().BeTrue();
         result.Message.Should().Be("User has been created successfully.");
     }
+
+    [Fact]
+    public async Task Handle_UserCreationFailed_ReturnErrorResponseWithErrors()
+    {
+        //Arrange
+        var command = new CreateUserCommandRequest("newuser", "newuser@mail.com", "Newpassword1234.");
+        _userManagerMock.Setup(x => x.FindByEmailAsync(command.Email)).ReturnsAsync((AppUser)null);
+        _userManagerMock.Setup(x => x.FindByNameAsync(command.UserName)).ReturnsAsync((AppUser)null);
+        var identityErrors = new List<IdentityError>()
+        {
+            new IdentityError { Code = "PasswordTooShort", Description = "The password is too short." },
+            new IdentityError { Code = "DuplicateUserName", Description = "The username is already taken." }
+        };
+        var failedResult = IdentityResult.Failed(identityErrors.ToArray());
+        _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(failedResult);
+
+        //Act
+        var result= await _createUserCommandHandler.Handle(command, default);
+
+        //Assert
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Contain("User creation failed. Errors:\n");
+        result.Message.Should().Contain("PasswordTooShort: The password is too short.");
+        result.Message.Should().Contain("DuplicateUserName: The username is already taken.");
+    }
 }
