@@ -51,4 +51,21 @@ public class CreateUserCommandHandlerTests
 
      
     }
+
+    [Fact]
+    public async Task Handle_UserCreatedSuccessfully_ReturnSuccessResponse()
+    {
+        //Arrange
+        var command = new CreateUserCommandRequest("newuser", "newuser@mail.com", "Newpassword1234.");
+        _userManagerMock.Setup(x => x.FindByEmailAsync(command.Email)).ReturnsAsync((AppUser)null);
+        _userManagerMock.Setup(x => x.FindByNameAsync(command.UserName)).ReturnsAsync((AppUser)null);
+        _userManagerMock.Setup(x=>x.CreateAsync(It.IsAny<AppUser>(),command.Password)).ReturnsAsync(IdentityResult.Success);
+
+        //Act
+        var result= await _createUserCommandHandler.Handle(command,default);
+
+        //Assert
+        result.IsSuccessful.Should().BeTrue();
+        result.Message.Should().Be("User has been created successfully.");
+    }
 }
