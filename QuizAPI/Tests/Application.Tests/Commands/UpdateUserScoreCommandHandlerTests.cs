@@ -28,5 +28,26 @@ namespace Application.Tests.Commands
             //Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(request, CancellationToken.None));
         }
+
+        [Fact]
+        public async Task Handle_ScoreUpdatedSuccessfully_ShouldReturnSuccessResponse()
+        {
+            //Arrange
+            var request = new UpdateUserScoreCommandRequest() {Id= Guid.NewGuid(), Score = 5, TimeTaken = 15 };
+            var user= new AppUser() { Id= Guid.NewGuid().ToString(), Score = 4,TimeTaken = 20 };
+            _mockUserManager.Setup(x=>x.FindByIdAsync(request.Id.ToString())).ReturnsAsync((user));
+            user.Score=request.Score;
+            user.TimeTaken=request.TimeTaken;
+            _mockUserManager.Setup(x=>x.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
+
+            //Act
+            var response= await _handler.Handle(request,CancellationToken.None);
+
+            //Assert
+            response.Success.Should().BeTrue();
+            response.Message.Should().Be("User score updated successfully");
+            user.Score.Should().Be(request.Score);
+            user.TimeTaken.Should().Be(request.TimeTaken);
+        }
     }
 }
