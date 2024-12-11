@@ -27,7 +27,11 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
         if (user == null)
             user = await _userManager.FindByNameAsync(request.UserNameorEmail);
         if (user == null)
+        {
             response = response with { IsSuccessful = false, Message = "Username or password is not correct", Token = null };
+            return response;
+        }
+            
 
         SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (result.Succeeded)//Authentication success.
