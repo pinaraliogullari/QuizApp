@@ -49,5 +49,23 @@ namespace Application.Tests.Commands
             user.Score.Should().Be(request.Score);
             user.TimeTaken.Should().Be(request.TimeTaken);
         }
+
+        [Fact]
+        public async Task Handle_ScoreUpdateFail_ShouldReturnFailResponse()
+        {
+            var request = new UpdateUserScoreCommandRequest() { Id = Guid.NewGuid(), Score = 5, TimeTaken = 15 };
+            var user = new AppUser() { Id = Guid.NewGuid().ToString(), Score = 4, TimeTaken = 20 };
+            _mockUserManager.Setup(x => x.FindByIdAsync(request.Id.ToString())).ReturnsAsync((user));
+            _mockUserManager.Setup(x => x.UpdateAsync(user)).ReturnsAsync(IdentityResult.Failed());
+
+            //Act
+            var response = await _handler.Handle(request, CancellationToken.None);
+
+            //Assert
+            response.Success.Should().BeFalse();
+            response.Message.Should().Be("Failed to update user score");
+          
+        }
     }
+    
 }
