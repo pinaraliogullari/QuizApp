@@ -19,7 +19,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserExistsByEmail_ReturnErrorResponse()
+    public async Task Handle_UserExistsByEmail_ShouldReturnErrorResponse()
     {
         //Arrange
         var command = new CreateUserCommandRequest("testuser", "test@mail.com", "Sample1234.");
@@ -35,7 +35,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserExistsByUsername_ReturnErrorResponse()
+    public async Task Handle_UserExistsByUsername_ShouldReturnErrorResponse()
     {
         //Arrange
         var command = new CreateUserCommandRequest( "testuser",  "test@mail.com","Sample1234.");
@@ -53,7 +53,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserCreatedSuccessfully_ReturnSuccessResponse()
+    public async Task Handle_UserCreatedSuccessfully_ShouldReturnSuccessResponse()
     {
         //Arrange
         var command = new CreateUserCommandRequest("newuser", "newuser@mail.com", "Newpassword1234.");
@@ -70,7 +70,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserCreationFailed_ReturnErrorResponseWithErrors()
+    public async Task Handle_UserCreationFailed_ShouldReturnErrorResponseWithErrors()
     {
         //Arrange
         var command = new CreateUserCommandRequest("newuser", "newuser@mail.com", "Newpassword1234.");

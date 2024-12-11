@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using QuizAPI.Application;
+using QuizAPI.Application.DTOs;
 using QuizAPI.Application.Features.Commands.AppUser.LoginUser;
 using QuizAPI.Domain.Entities;
 using Xunit;
@@ -69,6 +70,28 @@ public class LoginUserCommandHandlerTests
         response.IsSuccessful.Should().BeFalse();
         response.Message.Should().Be("Authentication error!");
         response.Token.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Handle_LoginIsSuccess_ShouldReturnSuccessResponse()
+    {
+        //Arrange
+        var request = new LoginUserCommandRequest(UserNameorEmail: "existuser@mail.com", Password: "Testpassword123.");
+        var user = new AppUser() {Id=Guid.NewGuid().ToString(), Email = "existuser@mail.com", UserName = "existuser" };
+        var token = new Token { AccessToken = "sampleAccessToken", Expiration = System.DateTime.UtcNow.AddMinutes(60) };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(request.UserNameorEmail)).ReturnsAsync(user);
+        _mockSignInManager.Setup(x => x.CheckPasswordSignInAsync(It.IsAny<AppUser>(), request.Password, false)).ReturnsAsync(SignInResult.Success);
+        _mockTokenHandler.Setup(x => x.CreateAccessToken(It.IsAny<int>(), user.Id, It.IsAny<string>())).Returns(token);
+
+        //Act
+        var response = await _handler.Handle(request, CancellationToken.None);
+
+        //Assert
+        response.IsSuccessful.Should().BeTrue();
+        response.Message.Should().Be("Login is successful");
+        response.Token.Should().BeEquivalentTo(token);
+
     }
 
 
