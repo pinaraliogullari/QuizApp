@@ -10,12 +10,12 @@ namespace Application.Tests.Commands;
 public class CreateUserCommandHandlerTests
 {
     private readonly Mock<UserManager<AppUser>> _userManagerMock;
-    private readonly CreateUserCommandHandler _createUserCommandHandler;
+    private readonly CreateUserCommandHandler _handler;
     public CreateUserCommandHandlerTests()
     {
         var userStoreMock = new Mock<IUserStore<AppUser>>();
         _userManagerMock = new Mock<UserManager<AppUser>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-        _createUserCommandHandler = new CreateUserCommandHandler(_userManagerMock.Object);
+        _handler = new CreateUserCommandHandler(_userManagerMock.Object);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class CreateUserCommandHandlerTests
         _userManagerMock.Setup(x => x.FindByEmailAsync(command.Email)).ReturnsAsync(existingUser);
 
         //Act
-        var result = await _createUserCommandHandler.Handle(command, default);
+        var result = await _handler.Handle(command, default);
 
         //Assert
         result.IsSuccessful.Should().BeFalse();
@@ -43,7 +43,7 @@ public class CreateUserCommandHandlerTests
         _userManagerMock.Setup(x=>x.FindByNameAsync(command.UserName)).ReturnsAsync(existingUser);
 
         //Act
-        var result= await _createUserCommandHandler.Handle(command,default);
+        var result= await _handler.Handle(command,default);
 
         //Assert
         result.IsSuccessful.Should().BeFalse();
@@ -62,7 +62,7 @@ public class CreateUserCommandHandlerTests
         _userManagerMock.Setup(x=>x.CreateAsync(It.IsAny<AppUser>(),command.Password)).ReturnsAsync(IdentityResult.Success);
 
         //Act
-        var result= await _createUserCommandHandler.Handle(command,default);
+        var result= await _handler.Handle(command,default);
 
         //Assert
         result.IsSuccessful.Should().BeTrue();
@@ -85,7 +85,7 @@ public class CreateUserCommandHandlerTests
         _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(failedResult);
 
         //Act
-        var result= await _createUserCommandHandler.Handle(command, default);
+        var result= await _handler.Handle(command, default);
 
         //Assert
         result.IsSuccessful.Should().BeFalse();

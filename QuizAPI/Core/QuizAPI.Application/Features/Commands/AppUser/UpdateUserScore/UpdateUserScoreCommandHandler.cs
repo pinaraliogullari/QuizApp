@@ -16,7 +16,7 @@ public class UpdateUserScoreCommandHandler : IRequestHandler<UpdateUserScoreComm
     {
         var user = await _userManager.FindByIdAsync(request.Id.ToString());
         if (user == null)
-            throw new ArgumentException("User can not found");
+            throw new ArgumentNullException("User can not found");
         user.Score = request.Score;
         user.TimeTaken = request.TimeTaken;
         var result = await _userManager.UpdateAsync(user);
