@@ -37,7 +37,7 @@ public class LoginUserCommandHandlerTests
     }
     [Fact]
 
-    public async Task Handle_UserNotFound_ReturnErrorResponse()
+    public async Task Handle_UserNotFound_ShouldReturnErrorResponse()
     {
         // Arrange
         var request = new LoginUserCommandRequest(UserNameorEmail: "nonexistent@mail.com", Password: "Testpassword123.");
@@ -50,6 +50,24 @@ public class LoginUserCommandHandlerTests
         // Assert
         response.IsSuccessful.Should().BeFalse();
         response.Message.Should().Be("Username or password is not correct");
+        response.Token.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Handle_LoginIsFail_ShouldReturnErrorResponse()
+    {
+        //Arrange
+        var request = new LoginUserCommandRequest(UserNameorEmail: "existuser@mail.com", Password: "Testpassword123.");
+        var user = new AppUser() { Email = "existuser@mail.com", UserName = "existuser" };
+       _mockUserManager.Setup(x => x.FindByEmailAsync(request.UserNameorEmail)).ReturnsAsync(user);
+        _mockSignInManager.Setup(x=>x.CheckPasswordSignInAsync(It.IsAny<AppUser>(),request.Password,false)).ReturnsAsync(SignInResult.Failed);
+
+        //Act
+        var response= await _handler.Handle(request,CancellationToken.None);
+
+        //Assert
+        response.IsSuccessful.Should().BeFalse();
+        response.Message.Should().Be("Authentication error!");
         response.Token.Should().BeNull();
     }
 
