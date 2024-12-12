@@ -21,7 +21,8 @@ public class LoginUserCommandRequestValidator : AbstractValidator<LoginUserComma
 
 
         RuleFor(x => x.Password)
-            .NotEmpty().NotNull().WithMessage("Password is required")
+            .NotEmpty().WithMessage("Password is required")
+            .NotNull()
             .MinimumLength(4).WithMessage("Password length must be at least 4 characters")
             .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter")
             .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter")

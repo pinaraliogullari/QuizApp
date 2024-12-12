@@ -144,7 +144,9 @@ public class CreateUserCommandRequestValidatorTests
         var result = _validator.TestValidate(request);
 
         // Assert
-        result.Errors.Should().BeEmpty();
+        result.ShouldNotHaveValidationErrorFor(x => x.Email);
+        result.ShouldNotHaveValidationErrorFor(x => x.Password);
+        result.ShouldNotHaveValidationErrorFor(x => x.UserName);
     }
 
 }

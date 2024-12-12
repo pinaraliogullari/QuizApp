@@ -65,9 +65,21 @@ namespace QuizAPI.Application.Validators.Tests
             var result = _validator.TestValidate(request);
 
             // Assert
-            result.Errors.Should().BeEmpty();
+            result.ShouldNotHaveValidationErrorFor(x => x.UserNameorEmail);
+            result.ShouldNotHaveValidationErrorFor(x => x.Password);
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordIsEmpty_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "");
 
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password is required");
+        }
 
     }
 }
