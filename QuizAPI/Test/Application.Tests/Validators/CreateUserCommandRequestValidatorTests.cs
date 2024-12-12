@@ -53,6 +53,18 @@ public class CreateUserCommandRequestValidatorTests
         result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password length must be at least 6 characters");
    
     }
+    [Fact]
+    public async Task CreateUserValidator_WhenPasswordDoesNotContainUpperCase_ShouldHaveValidationError()
+    {
+        //Arrange
+        var request = new CreateUserCommandRequest("TestUser", "test@example.com", "short123.");
+
+        //Act
+        var result = _validator.Validate(request);
+
+        //Assert
+        result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one uppercase letter");
+    }
 
 
 }
