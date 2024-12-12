@@ -93,5 +93,18 @@ public class CreateUserCommandRequestValidatorTests
         result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one special character");
     }
 
+    [Fact]
+    public async Task CreateUserValidator_WhenPasswordDoesNotContainDigit_ShouldHaveValidationError()
+    {
+        //Arrange
+        var request = new CreateUserCommandRequest("TestUser", "test@example.com", "Short/");
+
+        //Act
+        var result = _validator.Validate(request);
+
+        //Assert
+        result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one digit");
+    }
+
 
 }
