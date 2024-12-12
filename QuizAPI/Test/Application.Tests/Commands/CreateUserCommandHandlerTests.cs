@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using QuizAPI.Application.Features.Commands.AppUser.CreateUser;
 using QuizAPI.Domain.Entities;
-using Xunit;
 
 namespace Application.Tests.Commands;
 
@@ -38,18 +37,18 @@ public class CreateUserCommandHandlerTests
     public async Task Handle_UserExistsByUsername_ShouldReturnErrorResponse()
     {
         //Arrange
-        var command = new CreateUserCommandRequest( "testuser",  "test@mail.com","Sample1234.");
+        var command = new CreateUserCommandRequest("testuser", "test@mail.com", "Sample1234.");
         var existingUser = new AppUser() { UserName = "testuser", Email = "olduser@mail.com" };
-        _userManagerMock.Setup(x=>x.FindByNameAsync(command.UserName)).ReturnsAsync(existingUser);
+        _userManagerMock.Setup(x => x.FindByNameAsync(command.UserName)).ReturnsAsync(existingUser);
 
         //Act
-        var result= await _handler.Handle(command,default);
+        var result = await _handler.Handle(command, default);
 
         //Assert
         result.IsSuccessful.Should().BeFalse();
         result.Message.Should().Be("This username is already taken.");
 
-     
+
     }
 
     [Fact]
@@ -59,10 +58,10 @@ public class CreateUserCommandHandlerTests
         var command = new CreateUserCommandRequest("newuser", "newuser@mail.com", "Newpassword1234.");
         _userManagerMock.Setup(x => x.FindByEmailAsync(command.Email)).ReturnsAsync((AppUser)null);
         _userManagerMock.Setup(x => x.FindByNameAsync(command.UserName)).ReturnsAsync((AppUser)null);
-        _userManagerMock.Setup(x=>x.CreateAsync(It.IsAny<AppUser>(),command.Password)).ReturnsAsync(IdentityResult.Success);
+        _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), command.Password)).ReturnsAsync(IdentityResult.Success);
 
         //Act
-        var result= await _handler.Handle(command,default);
+        var result = await _handler.Handle(command, default);
 
         //Assert
         result.IsSuccessful.Should().BeTrue();
@@ -85,7 +84,7 @@ public class CreateUserCommandHandlerTests
         _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).ReturnsAsync(failedResult);
 
         //Act
-        var result= await _handler.Handle(command, default);
+        var result = await _handler.Handle(command, default);
 
         //Assert
         result.IsSuccessful.Should().BeFalse();

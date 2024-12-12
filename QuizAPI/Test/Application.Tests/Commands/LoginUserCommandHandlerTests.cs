@@ -6,7 +6,6 @@ using QuizAPI.Application;
 using QuizAPI.Application.DTOs;
 using QuizAPI.Application.Features.Commands.AppUser.LoginUser;
 using QuizAPI.Domain.Entities;
-using Xunit;
 
 namespace Application.Tests.Commands;
 
@@ -60,11 +59,11 @@ public class LoginUserCommandHandlerTests
         //Arrange
         var request = new LoginUserCommandRequest(UserNameorEmail: "existuser@mail.com", Password: "Testpassword123.");
         var user = new AppUser() { Email = "existuser@mail.com", UserName = "existuser" };
-       _mockUserManager.Setup(x => x.FindByEmailAsync(request.UserNameorEmail)).ReturnsAsync(user);
-        _mockSignInManager.Setup(x=>x.CheckPasswordSignInAsync(It.IsAny<AppUser>(),request.Password,false)).ReturnsAsync(SignInResult.Failed);
+        _mockUserManager.Setup(x => x.FindByEmailAsync(request.UserNameorEmail)).ReturnsAsync(user);
+        _mockSignInManager.Setup(x => x.CheckPasswordSignInAsync(It.IsAny<AppUser>(), request.Password, false)).ReturnsAsync(SignInResult.Failed);
 
         //Act
-        var response= await _handler.Handle(request,CancellationToken.None);
+        var response = await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         response.IsSuccessful.Should().BeFalse();
@@ -77,7 +76,7 @@ public class LoginUserCommandHandlerTests
     {
         //Arrange
         var request = new LoginUserCommandRequest(UserNameorEmail: "existuser@mail.com", Password: "Testpassword123.");
-        var user = new AppUser() {Id=Guid.NewGuid().ToString(), Email = "existuser@mail.com", UserName = "existuser" };
+        var user = new AppUser() { Id = Guid.NewGuid().ToString(), Email = "existuser@mail.com", UserName = "existuser" };
         var token = new Token { AccessToken = "sampleAccessToken", Expiration = System.DateTime.UtcNow.AddMinutes(60) };
 
         _mockUserManager.Setup(x => x.FindByEmailAsync(request.UserNameorEmail)).ReturnsAsync(user);

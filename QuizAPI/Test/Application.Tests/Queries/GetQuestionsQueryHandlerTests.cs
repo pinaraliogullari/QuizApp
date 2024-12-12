@@ -45,7 +45,7 @@ public class GetQuestionsQueryHandlerTests
         response.Should().NotBeNullOrEmpty();
         response.Count().Should().Be(5);
         response.Should().OnlyHaveUniqueItems(x => x.Id);
-     
+
         response.Should().BeEquivalentTo(mappedQuestions, options => options.WithoutStrictOrdering());
     }
 

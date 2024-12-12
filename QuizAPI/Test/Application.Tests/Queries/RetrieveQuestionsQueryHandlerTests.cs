@@ -22,7 +22,7 @@ public class RetrieveQuestionsQueryHandlerTests
         //Arrange
         var request = new RetrieveQuestionsQueryRequest()
         {
-            QuestionIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid()}
+            QuestionIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() }
         };
         var questions = new List<Question>
         {
@@ -49,16 +49,16 @@ public class RetrieveQuestionsQueryHandlerTests
                 Option4 = "An IDE"
             }
         };
-        _mockQuestionReadRepository.Setup(x=>x.GetAllAsync(null,null,false)).ReturnsAsync(questions);
+        _mockQuestionReadRepository.Setup(x => x.GetAllAsync(null, null, false)).ReturnsAsync(questions);
 
         //Act
-        var response= await _handler.Handle(request,CancellationToken.None);
+        var response = await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         response.Should().NotBeNullOrEmpty();
         response.Should().HaveCount(2);
         response.Should().Contain(x => x.Id == request.QuestionIds[0]);
-        response.Should().Contain(x=>x.Id== request.QuestionIds[1]);
+        response.Should().Contain(x => x.Id == request.QuestionIds[1]);
 
     }
 
@@ -70,7 +70,7 @@ public class RetrieveQuestionsQueryHandlerTests
         _mockQuestionReadRepository.Setup(x => x.GetAllAsync(null, null, false)).ReturnsAsync((List<Question>)null);
 
         //Act
-        Func<Task> action= async()=>await _handler.Handle(request,CancellationToken.None);
+        Func<Task> action = async () => await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         action.Should().ThrowAsync<InvalidOperationException>().WithMessage("No questions available.");
