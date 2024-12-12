@@ -92,6 +92,18 @@ namespace QuizAPI.Application.Validators.Tests
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password length must be at least 4 characters");
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordDoesNotContainUpperCase_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "abcd1.");
+
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one uppercase letter");
+        }
 
     }
 }
