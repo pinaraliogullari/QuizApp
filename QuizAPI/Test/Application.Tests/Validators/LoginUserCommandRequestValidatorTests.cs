@@ -80,6 +80,18 @@ namespace QuizAPI.Application.Validators.Tests
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password is required");
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordIsLessThan4Characters_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "abc");
+
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password length must be at least 4 characters");
+        }
 
     }
 }
