@@ -40,6 +40,20 @@ namespace QuizAPI.Application.Validators.Tests
                   .WithErrorMessage("UserName must be at least 4 characters");
         }
 
+        [Fact]
+        public async Task LoginUserValidate_WhenEmailIsInvalid_ShouldHaveError()
+        {
+            //Arrange
+            var request = new LoginUserCommandRequest("@xy", "ValidPassword1!");
+
+            //Act
+            var result = _validator.TestValidate(request);
+
+            //Assert
+            result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
+                  .WithErrorMessage("Please enter a valid email address.");
+        }
+
 
 
     }
