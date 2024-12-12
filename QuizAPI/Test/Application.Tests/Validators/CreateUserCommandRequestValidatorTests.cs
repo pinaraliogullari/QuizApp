@@ -80,5 +80,18 @@ public class CreateUserCommandRequestValidatorTests
         result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one lowercase letter");
     }
 
+    [Fact]
+    public async Task CreateUserValidator_WhenPasswordDoesNotContainSpecialCharacter_ShouldHaveValidationError()
+    {
+        //Arrange
+        var request = new CreateUserCommandRequest("TestUser", "test@example.com", "Short123");
+
+        //Act
+        var result = _validator.Validate(request);
+
+        //Assert
+        result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one special character");
+    }
+
 
 }
