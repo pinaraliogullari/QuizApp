@@ -38,6 +38,5 @@ public class UpdateUserScoreCommandHandler : IRequestHandler<UpdateUserScoreComm
         }
 
 
-        throw new NotImplementedException();
     }
 }

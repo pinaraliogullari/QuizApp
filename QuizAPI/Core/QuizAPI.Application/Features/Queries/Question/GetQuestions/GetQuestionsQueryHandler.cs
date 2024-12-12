@@ -15,6 +15,9 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
     public async Task<List<GetQuestionsQueryResponse>> Handle(GetQuestionsQueryRequest request, CancellationToken cancellationToken)
     {
         var questions = await _questionReadRepository.GetAllAsync(options: null, include: null, tracking: false);
+        if (questions == null || !questions.Any())
+            throw new InvalidOperationException("No questions available to retrieve.");
+
         var random5qns = questions
             .OrderBy(x => Guid.NewGuid())
             .Take(5)

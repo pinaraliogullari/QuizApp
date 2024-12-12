@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\Core\QuizAPI.Application\QuizAPI.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
-
 </Project>
