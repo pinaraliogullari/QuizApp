@@ -15,6 +15,9 @@ public class RetrieveQuestionsQueryHandler : IRequestHandler<RetrieveQuestionsQu
     public async Task<List<RetrieveQuestionsQueryResponse>> Handle(RetrieveQuestionsQueryRequest request, CancellationToken cancellationToken)
     {
         var questions = await _questionReadRepository.GetAllAsync(options: null, include: null, tracking: false);
+
+        if (questions == null || !questions.Any())
+            throw new InvalidOperationException("No questions available.");
         var answers = questions
             .Where(x => request.QuestionIds.Contains(x.Id))
             .Select(x => new RetrieveQuestionsQueryResponse()
