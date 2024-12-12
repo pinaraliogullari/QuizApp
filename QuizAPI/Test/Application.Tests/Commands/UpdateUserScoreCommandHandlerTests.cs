@@ -25,8 +25,11 @@ namespace Application.Tests.Commands
             var request = new UpdateUserScoreCommandRequest() { Id = Guid.NewGuid(), Score = 5, TimeTaken = 15 };
             _mockUserManager.Setup(x => x.FindByIdAsync(request.Id.ToString())).ReturnsAsync((AppUser)null);
 
-            //Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(request, CancellationToken.None));
+            //Act
+            Func<Task> action = async () => await _handler.Handle(request, CancellationToken.None);
+
+            //Assert
+            await action.Should().ThrowAsync<ArgumentException>().WithMessage("User can not found");
         }
 
         [Fact]

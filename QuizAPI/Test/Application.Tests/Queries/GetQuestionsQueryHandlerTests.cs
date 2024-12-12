@@ -48,4 +48,19 @@ public class GetQuestionsQueryHandlerTests
      
         response.Should().BeEquivalentTo(mappedQuestions, options => options.WithoutStrictOrdering());
     }
+
+    [Fact]
+    public async Task Handle_WhenQuestionsAreNotExist_ShouldThrowInvalidOperationException()
+    {
+        //Arrange
+        var request = new GetQuestionsQueryRequest();
+        _mockQuestionReadRepository.Setup(x => x.GetAllAsync(null, null, false)).ReturnsAsync((List<Question>)null);
+
+        //Act 
+        Func<Task> action = async () => await _handler.Handle(request, CancellationToken.None);
+
+        //Assert
+        await action.Should().ThrowAsync<InvalidOperationException>().WithMessage("No questions available to retrieve.");
+
+    }
 }
