@@ -13,10 +13,10 @@ namespace QuizAPI.Application.Validators.Tests
         }
 
         [Fact]
-        public void LoginUserValidate_WhenUserNameOrEmailIsEmpty_ShouldHaveError()
+        public async Task LoginUserValidate_WhenUserNameOrEmailIsEmpty_ShouldHaveError()
         {
             //Arrange
-            var request = new LoginUserCommandRequest("", "ValidPassword1!");
+            var request = new LoginUserCommandRequest("", "Validpassword123.");
 
             //Act
             var result = _validator.TestValidate(request);
@@ -25,6 +25,22 @@ namespace QuizAPI.Application.Validators.Tests
             result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
                   .WithErrorMessage("UserName or Email is required");
         }
+
+        [Fact]
+        public async Task LoginUserValidate_WhenUserNameIsLessThan4Characters_ShouldHaveError()
+        {
+            //Arrange
+            var request = new LoginUserCommandRequest("abc", "ValidPassword1!");
+
+            //Act
+            var result = _validator.TestValidate(request);
+
+            //Assert
+            result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
+                  .WithErrorMessage("UserName must be at least 4 characters");
+        }
+
+
 
     }
 }
