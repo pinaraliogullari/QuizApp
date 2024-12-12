@@ -61,4 +61,18 @@ public class RetrieveQuestionsQueryHandlerTests
         response.Should().Contain(x=>x.Id== request.QuestionIds[1]);
 
     }
+
+    [Fact]
+    public async Task Handle_InvalidIds_InvalidOperationException()
+    {
+        //Arrange
+        var request = new RetrieveQuestionsQueryRequest();
+        _mockQuestionReadRepository.Setup(x => x.GetAllAsync(null, null, false)).ReturnsAsync((List<Question>)null);
+
+        //Act
+        Func<Task> action= async()=>await _handler.Handle(request,CancellationToken.None);
+
+        //Assert
+        action.Should().ThrowAsync<InvalidOperationException>().WithMessage("No questions available.");
+    }
 }
