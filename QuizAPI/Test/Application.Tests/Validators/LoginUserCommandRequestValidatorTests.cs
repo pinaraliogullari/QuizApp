@@ -1,4 +1,6 @@
-﻿using FluentValidation.TestHelper;
+﻿using FluentAssertions;
+using FluentValidation.TestHelper;
+using QuizAPI.Application.Features.Commands.AppUser.CreateUser;
 using QuizAPI.Application.Features.Commands.AppUser.LoginUser;
 
 namespace QuizAPI.Application.Validators.Tests
@@ -53,7 +55,18 @@ namespace QuizAPI.Application.Validators.Tests
             result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
                   .WithErrorMessage("Please enter a valid email address.");
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenAllFieldsAreValid_ShouldNotHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "ValidPassword1!");
 
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.Errors.Should().BeEmpty();
+        }
 
 
     }
