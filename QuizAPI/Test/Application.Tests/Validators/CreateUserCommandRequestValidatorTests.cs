@@ -105,6 +105,42 @@ public class CreateUserCommandRequestValidatorTests
         //Assert
         result.Errors.Should().Contain(x => x.PropertyName == "Password" && x.ErrorMessage == "Password must contain at least one digit");
     }
+    [Fact]
+    public async Task CreateUserValidator_WhenUserNameIsNullOrEmpty_ShouldHaveValidationErrors()
+    {
+        // Arrange
+        var request = new CreateUserCommandRequest("", "test@mail.com", "Password1!");
+
+        // Act
+        var result = _validator.Validate(request);
+
+        // Assert
+        result.Errors.Should().Contain(x => x.PropertyName == "UserName" && x.ErrorMessage == "Username is required");
+    }
+    [Fact]
+    public async Task CreateUserValidator_WhenUserNameIsTooShort_ShouldHaveValidationErrors()
+    {
+        // Arrange
+        var request = new CreateUserCommandRequest("abc", "test@mail.com", "Password1!");
+
+        // Act
+        var result = _validator.Validate(request);
+
+        // Assert
+        result.Errors.Should().Contain(x => x.PropertyName == "UserName" && x.ErrorMessage == "Username must be at least 4 characters long");
+    }
+    [Fact]
+    public async Task CreateUserValidator_WhenAllFieldsAreValid_ShouldNotHaveValidationErrors()
+    {
+        // Arrange
+        var request = new CreateUserCommandRequest("TestUser","test@example.com", "Password1!" );
+
+        // Act
+        var result = _validator.Validate(request);
+
+        // Assert
+        result.Errors.Should().BeEmpty();
+    }
 
 
 }
