@@ -9,8 +9,8 @@ public class CreateUserCommandRequestValidator : AbstractValidator<CreateUserCom
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required")
-            .EmailAddress().WithMessage("Invalid email format.")
-            .WithMessage("Please enter a valid email address.");
+            .EmailAddress().WithMessage("Please enter a valid email address.");
+        
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required")
