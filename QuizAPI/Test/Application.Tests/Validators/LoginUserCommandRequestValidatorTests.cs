@@ -3,143 +3,142 @@ using FluentValidation.TestHelper;
 using QuizAPI.Application.Features.Commands.AppUser.CreateUser;
 using QuizAPI.Application.Features.Commands.AppUser.LoginUser;
 
-namespace QuizAPI.Application.Validators.Tests
+namespace QuizAPI.Application.Validators.Tests;
+
+public class LoginUserCommandRequestValidatorTests
 {
-    public class LoginUserCommandRequestValidatorTests
+    private readonly LoginUserCommandRequestValidator _validator;
+
+    public LoginUserCommandRequestValidatorTests()
     {
-        private readonly LoginUserCommandRequestValidator _validator;
+        _validator = new LoginUserCommandRequestValidator();
+    }
 
-        public LoginUserCommandRequestValidatorTests()
-        {
-            _validator = new LoginUserCommandRequestValidator();
-        }
+    [Fact]
+    public async Task LoginUserValidate_WhenUserNameOrEmailIsEmpty_ShouldHaveError()
+    {
+        //Arrange
+        var request = new LoginUserCommandRequest("", "Validpassword123.");
 
-        [Fact]
-        public async Task LoginUserValidate_WhenUserNameOrEmailIsEmpty_ShouldHaveError()
-        {
-            //Arrange
-            var request = new LoginUserCommandRequest("", "Validpassword123.");
+        //Act
+        var result = _validator.TestValidate(request);
 
-            //Act
-            var result = _validator.TestValidate(request);
+        //Assert
+        result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
+              .WithErrorMessage("UserName or Email is required");
+    }
 
-            //Assert
-            result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
-                  .WithErrorMessage("UserName or Email is required");
-        }
+    [Fact]
+    public async Task LoginUserValidate_WhenUserNameIsLessThan4Characters_ShouldHaveError()
+    {
+        //Arrange
+        var request = new LoginUserCommandRequest("abc", "ValidPassword1!");
 
-        [Fact]
-        public async Task LoginUserValidate_WhenUserNameIsLessThan4Characters_ShouldHaveError()
-        {
-            //Arrange
-            var request = new LoginUserCommandRequest("abc", "ValidPassword1!");
+        //Act
+        var result = _validator.TestValidate(request);
 
-            //Act
-            var result = _validator.TestValidate(request);
+        //Assert
+        result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
+              .WithErrorMessage("UserName must be at least 4 characters");
+    }
 
-            //Assert
-            result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
-                  .WithErrorMessage("UserName must be at least 4 characters");
-        }
+    [Fact]
+    public async Task LoginUserValidate_WhenEmailIsInvalid_ShouldHaveError()
+    {
+        //Arrange
+        var request = new LoginUserCommandRequest("@xy", "ValidPassword1!");
 
-        [Fact]
-        public async Task LoginUserValidate_WhenEmailIsInvalid_ShouldHaveError()
-        {
-            //Arrange
-            var request = new LoginUserCommandRequest("@xy", "ValidPassword1!");
+        //Act
+        var result = _validator.TestValidate(request);
 
-            //Act
-            var result = _validator.TestValidate(request);
+        //Assert
+        result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
+              .WithErrorMessage("Please enter a valid email address.");
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenAllFieldsAreValid_ShouldNotHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "ValidPassword1!");
 
-            //Assert
-            result.ShouldHaveValidationErrorFor(x => x.UserNameorEmail)
-                  .WithErrorMessage("Please enter a valid email address.");
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenAllFieldsAreValid_ShouldNotHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "ValidPassword1!");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(x => x.UserNameorEmail);
+        result.ShouldNotHaveValidationErrorFor(x => x.Password);
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordIsEmpty_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "");
 
-            // Assert
-            result.ShouldNotHaveValidationErrorFor(x => x.UserNameorEmail);
-            result.ShouldNotHaveValidationErrorFor(x => x.Password);
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordIsEmpty_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password is required");
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordIsLessThan4Characters_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "abc");
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password is required");
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordIsLessThan4Characters_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "abc");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password length must be at least 4 characters");
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordDoesNotContainUpperCase_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "abcd1.");
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password length must be at least 4 characters");
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordDoesNotContainUpperCase_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "abcd1.");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one uppercase letter");
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordDoesNotContainLowerCaseCase_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "ABCD1.");
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one uppercase letter");
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordDoesNotContainLowerCaseCase_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "ABCD1.");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one lowercase letter");
+    }
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one lowercase letter");
-        }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordDoesNotContainDigit_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "Abcd.");
 
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordDoesNotContainDigit_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "Abcd.");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one digit");
+    }
+    [Fact]
+    public async Task LoginUserValidate_WhenPasswordDoesNotContainSpecialCharacter_ShouldHaveError()
+    {
+        // Arrange
+        var request = new LoginUserCommandRequest("TestUser", "Abcd1");
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one digit");
-        }
-        [Fact]
-        public async Task LoginUserValidate_WhenPasswordDoesNotContainSpecialCharacter_ShouldHaveError()
-        {
-            // Arrange
-            var request = new LoginUserCommandRequest("TestUser", "Abcd1");
+        // Act
+        var result = _validator.TestValidate(request);
 
-            // Act
-            var result = _validator.TestValidate(request);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one special character");
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one special character");
     }
 }
