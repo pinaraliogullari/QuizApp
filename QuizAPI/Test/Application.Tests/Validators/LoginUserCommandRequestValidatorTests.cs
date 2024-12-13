@@ -104,6 +104,20 @@ namespace QuizAPI.Application.Validators.Tests
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one uppercase letter");
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordDoesNotContainLowerCaseCase_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "ABCD1.");
+
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one lowercase letter");
+        }
+ 
+
 
     }
 }
