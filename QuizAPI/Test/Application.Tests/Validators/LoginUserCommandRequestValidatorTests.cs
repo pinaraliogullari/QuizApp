@@ -129,6 +129,17 @@ namespace QuizAPI.Application.Validators.Tests
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one digit");
         }
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordDoesNotContainSpecialCharacter_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "Abcd1");
 
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one special character");
+        }
     }
 }
