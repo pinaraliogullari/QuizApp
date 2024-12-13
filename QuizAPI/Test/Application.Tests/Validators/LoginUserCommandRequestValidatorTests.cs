@@ -116,8 +116,19 @@ namespace QuizAPI.Application.Validators.Tests
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one lowercase letter");
         }
- 
 
+        [Fact]
+        public async Task LoginUserValidate_WhenPasswordDoesNotContainDigit_ShouldHaveError()
+        {
+            // Arrange
+            var request = new LoginUserCommandRequest("TestUser", "Abcd.");
+
+            // Act
+            var result = _validator.TestValidate(request);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Password).WithErrorMessage("Password must contain at least one digit");
+        }
 
     }
 }
