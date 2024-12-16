@@ -1,21 +1,36 @@
-﻿using QuizAPI.Application.Services.Redis;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using QuizAPI.Application.Services.Redis;
+using System.Text.Json;
 
 namespace QuizAPI.Infrastructure.Services.Redis;
 
 public class CacheService : ICacheService
 {
-    public Task<T> GetAsync<T>(string key)
+    private readonly IDistributedCache _distributedCache;
+
+    public CacheService(IDistributedCache distributedCache)
     {
-        throw new NotImplementedException();
+        _distributedCache = distributedCache;
     }
 
-    public Task RemoveAsync(string key)
+    public async Task<T> GetAsync<T>(string key)
     {
-        throw new NotImplementedException();
+        var jsonData= await _distributedCache.GetStringAsync(key);
+        if (jsonData == null)
+            return default;
+        return JsonSerializer.Deserialize<T>(jsonData);
     }
 
-    public Task SetAsync<T>(string key, T value, TimeSpan absoluteExpirationRelativeToNow, TimeSpan slidingExpiration = default)
+    public async Task RemoveAsync(string key)=> await _distributedCache.RemoveAsync(key);
+
+    public async Task SetAsync<T>(string key, T value, TimeSpan absoluteExpirationRelativeToNow, TimeSpan slidingExpiration = default)
     {
-        throw new NotImplementedException();
+        var options = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
+            SlidingExpiration = slidingExpiration != null ? slidingExpiration : null,
+        };
+        var jsonData = JsonSerializer.Serialize(value);
+        await _distributedCache.SetStringAsync(key,jsonData,options);
     }
 }
