@@ -3,11 +3,14 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using QuizAPI.API.Middlewares;
 using QuizAPI.Application;
 using QuizAPI.Application.Validators;
 using QuizAPI.Infrastructure;
 using QuizAPI.Infrastructure.Filters;
 using QuizAPI.Persistence;
+using Serilog;
+using Serilog.Core;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
@@ -42,6 +46,16 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
                          policy => policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
                          .AllowAnyMethod().AllowAnyHeader()));
 
+Logger log = new LoggerConfiguration()
+
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log.txt")
+    .Enrich.FromLogContext()
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+builder.Host.UseSerilog(log); //bu servisi çaðýrýnca uygulamanýn buildindeki loglama mekanizmasý yerine Serilogu kullanmýþ oldum.
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
@@ -59,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
 
@@ -67,6 +81,7 @@ if (!Directory.Exists(imagesPath))
 {
     Directory.CreateDirectory(imagesPath);
 }
+
 
 app.UseStaticFiles(new StaticFileOptions
 {

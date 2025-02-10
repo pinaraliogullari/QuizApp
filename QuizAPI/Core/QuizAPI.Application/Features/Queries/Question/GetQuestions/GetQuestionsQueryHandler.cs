@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Logging;
 using QuizAPI.Application.Repositories;
 
 namespace QuizAPI.Application.Features.Queries.Question.GetQuestions;
@@ -6,10 +8,12 @@ namespace QuizAPI.Application.Features.Queries.Question.GetQuestions;
 public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest, List<GetQuestionsQueryResponse>>
 {
     private readonly IQuestionReadRepository _questionReadRepository;
+    private readonly ILogger<GetQuestionsQueryHandler> _logger;
 
-    public GetQuestionsQueryHandler(IQuestionReadRepository questionReadRepository)
+    public GetQuestionsQueryHandler(IQuestionReadRepository questionReadRepository, ILogger<GetQuestionsQueryHandler> logger)
     {
         _questionReadRepository = questionReadRepository;
+        _logger = logger;
     }
 
     public async Task<List<GetQuestionsQueryResponse>> Handle(GetQuestionsQueryRequest request, CancellationToken cancellationToken)
@@ -35,5 +39,12 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
             ))
             .ToList();
         return random5qns;
+       
     }
+  
+ 
 }
+    
+
+
+

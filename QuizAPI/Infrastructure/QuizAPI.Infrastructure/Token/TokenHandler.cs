@@ -19,7 +19,7 @@ namespace QuizAPI.Infrastructure
 
         public Token CreateAccessToken(int minute, string userId, string userName)
         {
-            Token token = new Token();
+            Token token = new ();
 
             SymmetricSecurityKey symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
             SigningCredentials signingCredentials = new(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
