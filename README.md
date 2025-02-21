@@ -16,6 +16,8 @@ This is a quiz app developed with **ASP.NET Core Web API** and **React.js**.
 - **Generic Repository Design Pattern**  
 - **MSSQL**  
 - **Redis Distributed Caching**
+- **SeriLog**
+- **Global Exception Handling**
 
 
 ## Frontend
