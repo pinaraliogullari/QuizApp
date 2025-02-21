@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
-builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();  
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
@@ -27,34 +27,32 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandRequestValidator>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration["Token:Issuer"],
-                ValidAudience = builder.Configuration["Token:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
-            };
-        });
-
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Token:Issuer"],
+            ValidAudience = builder.Configuration["Token:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+        };
+    });
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(
-                         policy => policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
-                         .AllowAnyMethod().AllowAnyHeader()));
+    policy => policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+    .AllowAnyMethod().AllowAnyHeader()));
 
 Logger log = new LoggerConfiguration()
-
     .WriteTo.Console()
-    .WriteTo.File("Logs/log.txt")
+    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) 
     .Enrich.FromLogContext()
     .MinimumLevel.Information()
     .CreateLogger();
 
-builder.Host.UseSerilog(log); //bu servisi çaðýrýnca uygulamanýn buildindeki loglama mekanizmasý yerine Serilogu kullanmýþ oldum.
+builder.Host.UseSerilog(log); 
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -67,14 +65,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>(); //tam olarak burada olmalý.
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
 app.UseHttpsRedirection();
+
 var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
 
 if (!Directory.Exists(imagesPath))
@@ -82,12 +82,12 @@ if (!Directory.Exists(imagesPath))
     Directory.CreateDirectory(imagesPath);
 }
 
-
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(imagesPath),
     RequestPath = "/api/images"
 });
+
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

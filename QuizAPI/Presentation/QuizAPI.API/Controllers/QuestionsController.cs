@@ -35,5 +35,6 @@ namespace QuizAPI.API.Controllers
             var response = await _mediator.Send(request);
             return Ok(response);
         }
+   
     }
 }

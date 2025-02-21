@@ -9,7 +9,7 @@ namespace QuizAPI.API.Controllers
     {
         [HttpGet]
         [Route("throw-error")]
-        public IActionResult ThrowError()
+        public async Task<IActionResult> ThrowError()
         {
             
             throw new InvalidOperationException("Test hata mesajı - Hata fırlatıldı.");
@@ -18,7 +18,7 @@ namespace QuizAPI.API.Controllers
        
         [HttpGet]
         [Route("success")]
-        public IActionResult Success()
+        public async Task<IActionResult> Success()
         {
             return Ok("Başarılı işlem.");
         }

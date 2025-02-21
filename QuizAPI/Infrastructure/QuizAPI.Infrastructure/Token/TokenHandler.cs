@@ -28,8 +28,10 @@ namespace QuizAPI.Infrastructure
             var claims = new[]
                {
                 new Claim("userId", userId),
-                new Claim("userName", userName)
+                new Claim("userName", userName),
             };
+
+
 
 
 
