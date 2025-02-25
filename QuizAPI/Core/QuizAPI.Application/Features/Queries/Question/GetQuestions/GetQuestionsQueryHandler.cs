@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Logging;
 using QuizAPI.Application.Repositories;
+using QuizAPI.Application.Services.Redis;
 
 namespace QuizAPI.Application.Features.Queries.Question.GetQuestions;
 
@@ -9,15 +9,25 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
 {
     private readonly IQuestionReadRepository _questionReadRepository;
     private readonly ILogger<GetQuestionsQueryHandler> _logger;
+    private readonly ICacheService _cacheService;
 
-    public GetQuestionsQueryHandler(IQuestionReadRepository questionReadRepository, ILogger<GetQuestionsQueryHandler> logger)
+    public GetQuestionsQueryHandler(IQuestionReadRepository questionReadRepository, ILogger<GetQuestionsQueryHandler> logger, ICacheService cacheService)
     {
         _questionReadRepository = questionReadRepository;
         _logger = logger;
+        _cacheService = cacheService;
     }
 
     public async Task<List<GetQuestionsQueryResponse>> Handle(GetQuestionsQueryRequest request, CancellationToken cancellationToken)
     {
+        var cacheKey= "RandomQuestions";
+        var cachedQuestions = await _cacheService.GetAsync<List<GetQuestionsQueryResponse>>(cacheKey);
+        if(cachedQuestions!=null && cachedQuestions.Any())
+        {
+            _logger.LogInformation("Cacheten veriler getirildi");
+            return cachedQuestions;
+        }
+
         var questions = await _questionReadRepository.GetAllAsync(options: null, include: null, tracking: false);
         if (questions == null || !questions.Any())
             throw new InvalidOperationException("No questions available to retrieve.");
@@ -38,6 +48,8 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
                 }
             ))
             .ToList();
+        await _cacheService.SetAsync(cacheKey, random5qns, TimeSpan.FromMinutes(10),TimeSpan.FromMinutes(5));
+        _logger.LogInformation("DBden veriler getirildi ve cachelendi");
         return random5qns;
        
     }
