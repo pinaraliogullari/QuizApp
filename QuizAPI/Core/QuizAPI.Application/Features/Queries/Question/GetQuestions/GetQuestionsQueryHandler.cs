@@ -17,6 +17,11 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQueryRequest
         _logger = logger;
         _cacheService = cacheService;
     }
+    //Temelde yapılan şey şu: bir cachekey belirlendi.(Veriler rediste key-value şeklinde saklanır.)
+    //Daha sonra cache serviste bu key var mı diye kontrol edildi.
+    // Eğer veri varsa getirildi ve logInfo ile bilgi verildi.
+    //Key yoksa veri dbden getiriliyor ve belirlenen cacheKey ile cacheleniyor.
+    //Sonraki isteklerde veri dbden değil cacheten geliyor olacak.
 
     public async Task<List<GetQuestionsQueryResponse>> Handle(GetQuestionsQueryRequest request, CancellationToken cancellationToken)
     {

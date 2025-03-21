@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using QuizAPI.Application.Features.Queries.Question.GetQuestions;
 using QuizAPI.Application.Repositories;
+using QuizAPI.Application.Services.Redis;
 using QuizAPI.Domain.Entities;
 
 namespace Application.Tests.Queries;
@@ -9,11 +11,15 @@ namespace Application.Tests.Queries;
 public class GetQuestionsQueryHandlerTests
 {
     private readonly Mock<IQuestionReadRepository> _mockQuestionReadRepository;
+    private readonly Mock<ILogger<GetQuestionsQueryHandler>> _mockLogger;
     private readonly GetQuestionsQueryHandler _handler;
+    private readonly Mock<ICacheService> _mockCacheService;
     public GetQuestionsQueryHandlerTests()
     {
+        _mockLogger = new Mock<ILogger<GetQuestionsQueryHandler>>();
         _mockQuestionReadRepository = new Mock<IQuestionReadRepository>();
-        _handler = new GetQuestionsQueryHandler(_mockQuestionReadRepository.Object);
+        _mockCacheService = new Mock<ICacheService>();
+        _handler = new GetQuestionsQueryHandler(_mockQuestionReadRepository.Object, _mockLogger.Object,_mockCacheService.Object);
     }
 
     [Fact]

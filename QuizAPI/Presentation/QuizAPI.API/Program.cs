@@ -11,6 +11,7 @@ using QuizAPI.Infrastructure.Filters;
 using QuizAPI.Persistence;
 using Serilog;
 using Serilog.Core;
+using Serilog.Sinks.Elasticsearch;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +20,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
-builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();  
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
-    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandRequestValidator>();
+builder.Services.AddControllers();
+
+//builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+//    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+//builder.Services.AddFluentValidationAutoValidation();
+//builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandRequestValidator>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -45,14 +48,22 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
     policy => policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
     .AllowAnyMethod().AllowAnyHeader()));
 
-Logger log = new LoggerConfiguration()
+
+var elasticsearchUri = builder.Configuration["Elasticsearch:Uri"] ?? "http://localhost:9200";
+
+Log.Logger = new LoggerConfiguration()
+     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
     .WriteTo.Console()
-    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) 
     .Enrich.FromLogContext()
     .MinimumLevel.Information()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticsearchUri))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = "logs-{0:yyyy.MM.dd}", 
+    })
     .CreateLogger();
 
-builder.Host.UseSerilog(log); 
+builder.Host.UseSerilog(); 
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
