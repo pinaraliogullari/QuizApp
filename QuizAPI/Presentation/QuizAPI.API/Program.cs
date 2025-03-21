@@ -24,6 +24,7 @@ builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 builder.Services.AddControllers();
 
+//ValidatorFilter kullanýlmadý.
 //builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
 //    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 //builder.Services.AddFluentValidationAutoValidation();
